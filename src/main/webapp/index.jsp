@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LIBERTADOR</title>
+        <title>LIBERTADOR 2</title>
         <link rel="stylesheet" href="styles.css">
         <!-- BOOTSTRAP ICONS CDN -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
