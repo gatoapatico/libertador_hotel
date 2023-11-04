@@ -46,6 +46,13 @@ public class PersistenceController {
             Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
+    public List<Usuario> buscarUsuarioRepetido(String email, int dni) {
+        try {
+            return usuJPA.buscarUsuariosPorEmailYDNI(email, dni);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+            return null; // 
+        }
+    }
 }

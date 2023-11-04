@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Persistencia;
 
 import Modelo.DetalleReserva;
@@ -25,11 +29,10 @@ public class DetalleReservaJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
     public DetalleReservaJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
-    
+
     public void create(DetalleReserva detalleReserva) {
         if (detalleReserva.getListaSalones() == null) {
             detalleReserva.setListaSalones(new ArrayList<Salon>());

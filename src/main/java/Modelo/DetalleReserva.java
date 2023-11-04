@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class DetalleReserva implements Serializable{
@@ -21,8 +23,9 @@ public class DetalleReserva implements Serializable{
     private List<Habitacion> Listahabitaciones;
     @OneToMany(mappedBy = "detalleReservasSalones")
     private List<Salon> listaSalones;
-    
+    @Temporal(TemporalType.DATE)
     private Date checkIn;
+    @Temporal(TemporalType.DATE)
     private Date chackOut;
     @OneToOne
     @JoinColumn(name = "id_reserva")
