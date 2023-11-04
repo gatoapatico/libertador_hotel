@@ -2,12 +2,14 @@ package Modelo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Salon implements Serializable {
@@ -24,13 +26,16 @@ public class Salon implements Serializable {
     private Date fechaBaja;
     private int clienteActual;
     private String estado;
-    @JoinColumn(name = "id_detalle_reserva")
-    private DetalleReserva detalleReservaSalon;
+    
+    
+    @ManyToOne
+    @JoinColumn(name= "Id_detalleReserva")
+    private DetalleReserva detalleReservasSalones;
 
     public Salon() {
     }
 
-    public Salon(int id, double costo, Categoria tipoSalon, int maxPersonas, Date fechaAlta, Date fechaBaja, int clienteActual, String estado, DetalleReserva detalleReservaSalon) {
+    public Salon(int id, double costo, Categoria tipoSalon, int maxPersonas, Date fechaAlta, Date fechaBaja, int clienteActual, String estado, DetalleReserva detalleReservasSalones) {
         this.id = id;
         this.costo = costo;
         this.tipoSalon = tipoSalon;
@@ -39,7 +44,7 @@ public class Salon implements Serializable {
         this.fechaBaja = fechaBaja;
         this.clienteActual = clienteActual;
         this.estado = estado;
-        this.detalleReservaSalon = detalleReservaSalon;
+        this.detalleReservasSalones = detalleReservasSalones;
     }
 
     public int getId() {
@@ -106,12 +111,12 @@ public class Salon implements Serializable {
         this.estado = estado;
     }
 
-    public DetalleReserva getDetalleReservaSalon() {
-        return detalleReservaSalon;
+    public DetalleReserva getDetalleReservasSalones() {
+        return detalleReservasSalones;
     }
 
-    public void setDetalleReservaSalon(DetalleReserva detalleReservaSalon) {
-        this.detalleReservaSalon = detalleReservaSalon;
+    public void setDetalleReservasSalones(DetalleReserva detalleReservasSalones) {
+        this.detalleReservasSalones = detalleReservasSalones;
     }
     
 }

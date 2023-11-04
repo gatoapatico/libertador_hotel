@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Persistencia;
 
 import Modelo.DetalleReserva;
@@ -19,10 +15,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
 public class DetalleReservaJpaController implements Serializable {
 
     public DetalleReservaJpaController(EntityManagerFactory emf) {
@@ -33,9 +25,11 @@ public class DetalleReservaJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+    
     public DetalleReservaJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
+    
     public void create(DetalleReserva detalleReserva) {
         if (detalleReserva.getListaSalones() == null) {
             detalleReserva.setListaSalones(new ArrayList<Salon>());
@@ -66,8 +60,13 @@ public class DetalleReservaJpaController implements Serializable {
                 reserva = em.merge(reserva);
             }
             for (Salon listaSalonesSalon : detalleReserva.getListaSalones()) {
-                listaSalonesSalon.getDetalleReservaSalon().add(detalleReserva);
+                DetalleReserva oldDetalleReservasSalonesOfListaSalonesSalon = listaSalonesSalon.getDetalleReservasSalones();
+                listaSalonesSalon.setDetalleReservasSalones(detalleReserva);
                 listaSalonesSalon = em.merge(listaSalonesSalon);
+                if (oldDetalleReservasSalonesOfListaSalonesSalon != null) {
+                    oldDetalleReservasSalonesOfListaSalonesSalon.getListaSalones().remove(listaSalonesSalon);
+                    oldDetalleReservasSalonesOfListaSalonesSalon = em.merge(oldDetalleReservasSalonesOfListaSalonesSalon);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -114,14 +113,19 @@ public class DetalleReservaJpaController implements Serializable {
             }
             for (Salon listaSalonesOldSalon : listaSalonesOld) {
                 if (!listaSalonesNew.contains(listaSalonesOldSalon)) {
-                    listaSalonesOldSalon.getDetalleReservaSalon().remove(detalleReserva);
+                    listaSalonesOldSalon.setDetalleReservasSalones(null);
                     listaSalonesOldSalon = em.merge(listaSalonesOldSalon);
                 }
             }
             for (Salon listaSalonesNewSalon : listaSalonesNew) {
                 if (!listaSalonesOld.contains(listaSalonesNewSalon)) {
-                    listaSalonesNewSalon.getDetalleReservaSalon().add(detalleReserva);
+                    DetalleReserva oldDetalleReservasSalonesOfListaSalonesNewSalon = listaSalonesNewSalon.getDetalleReservasSalones();
+                    listaSalonesNewSalon.setDetalleReservasSalones(detalleReserva);
                     listaSalonesNewSalon = em.merge(listaSalonesNewSalon);
+                    if (oldDetalleReservasSalonesOfListaSalonesNewSalon != null && !oldDetalleReservasSalonesOfListaSalonesNewSalon.equals(detalleReserva)) {
+                        oldDetalleReservasSalonesOfListaSalonesNewSalon.getListaSalones().remove(listaSalonesNewSalon);
+                        oldDetalleReservasSalonesOfListaSalonesNewSalon = em.merge(oldDetalleReservasSalonesOfListaSalonesNewSalon);
+                    }
                 }
             }
             em.getTransaction().commit();
@@ -160,7 +164,7 @@ public class DetalleReservaJpaController implements Serializable {
             }
             List<Salon> listaSalones = detalleReserva.getListaSalones();
             for (Salon listaSalonesSalon : listaSalones) {
-                listaSalonesSalon.getDetalleReservaSalon().remove(detalleReserva);
+                listaSalonesSalon.setDetalleReservasSalones(null);
                 listaSalonesSalon = em.merge(listaSalonesSalon);
             }
             em.remove(detalleReserva);

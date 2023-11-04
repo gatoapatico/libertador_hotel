@@ -27,14 +27,16 @@ public class Habitacion implements Serializable{
     //Falta modificar
     private String ocupantes;
     private String estado;
+    
+    
     @ManyToOne
-    @JoinColumn(name = "id_detalle_reserva")
-    private DetalleReserva detalleReservaHabitacion;
+    @JoinColumn(name= "Id_detalleReserva")
+    private DetalleReserva detalleReservasHabitaciones;
 
     public Habitacion() {
     }
 
-    public Habitacion(int id, int numHabitacion, double costohabitacion, Categoria tipoHabitacion, int maxPersonas, Date fechaAlta, Date fechaBaja, String ocupantes, String estado, DetalleReserva detalleReservaHabitacion) {
+    public Habitacion(int id, int numHabitacion, double costohabitacion, Categoria tipoHabitacion, int maxPersonas, Date fechaAlta, Date fechaBaja, String ocupantes, String estado, DetalleReserva detalleReservasHabitaciones) {
         this.id = id;
         this.numHabitacion = numHabitacion;
         this.costohabitacion = costohabitacion;
@@ -44,7 +46,7 @@ public class Habitacion implements Serializable{
         this.fechaBaja = fechaBaja;
         this.ocupantes = ocupantes;
         this.estado = estado;
-        this.detalleReservaHabitacion = detalleReservaHabitacion;
+        this.detalleReservasHabitaciones = detalleReservasHabitaciones;
     }
 
     public int getId() {
@@ -119,12 +121,12 @@ public class Habitacion implements Serializable{
         this.estado = estado;
     }
 
-    public DetalleReserva getDetalleReservaHabitacion() {
-        return detalleReservaHabitacion;
+    public DetalleReserva getDetalleReservasHabitaciones() {
+        return detalleReservasHabitaciones;
     }
 
-    public void setDetalleReservaHabitacion(DetalleReserva detalleReservaHabitacion) {
-        this.detalleReservaHabitacion = detalleReservaHabitacion;
+    public void setDetalleReservasHabitaciones(DetalleReserva detalleReservasHabitaciones) {
+        this.detalleReservasHabitaciones = detalleReservasHabitaciones;
     }
     
 }
