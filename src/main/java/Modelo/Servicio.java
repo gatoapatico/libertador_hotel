@@ -26,7 +26,6 @@ public class Servicio implements Serializable{
         @Temporal(TemporalType.DATE)
     private Date fechaBaja;
     private String estado;
-    @ManyToOne
     @ManyToMany
     @JoinTable(
         name = "ServicioCategoria",

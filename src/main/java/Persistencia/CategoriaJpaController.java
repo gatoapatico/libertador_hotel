@@ -18,11 +18,8 @@ import Modelo.Habitacion;
 import Persistencia.exceptions.NonexistentEntityException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
 public class CategoriaJpaController implements Serializable {
 
     public CategoriaJpaController(EntityManagerFactory emf) {
@@ -32,6 +29,9 @@ public class CategoriaJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    public CategoriaJpaController() {
+        emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
 
     public void create(Categoria categoria) {
@@ -68,13 +68,8 @@ public class CategoriaJpaController implements Serializable {
             categoria.setHabitaciones(attachedHabitaciones);
             em.persist(categoria);
             for (Servicio serviciosServicio : categoria.getServicios()) {
-                java.util.List<Modelo.Categoria> oldCategoriasOfServiciosServicio = serviciosServicio.getCategorias();
-                serviciosServicio.setCategorias(categoria);
+                serviciosServicio.getCategorias().add(categoria);
                 serviciosServicio = em.merge(serviciosServicio);
-                if (oldCategoriasOfServiciosServicio != null) {
-                    oldCategoriasOfServiciosServicio.getServicios().remove(serviciosServicio);
-                    oldCategoriasOfServiciosServicio = em.merge(oldCategoriasOfServiciosServicio);
-                }
             }
             for (Salon salonesSalon : categoria.getSalones()) {
                 Categoria oldTipoSalonOfSalonesSalon = salonesSalon.getTipoSalon();
@@ -138,19 +133,14 @@ public class CategoriaJpaController implements Serializable {
             categoria = em.merge(categoria);
             for (Servicio serviciosOldServicio : serviciosOld) {
                 if (!serviciosNew.contains(serviciosOldServicio)) {
-                    serviciosOldServicio.setCategorias(null);
+                    serviciosOldServicio.getCategorias().remove(categoria);
                     serviciosOldServicio = em.merge(serviciosOldServicio);
                 }
             }
             for (Servicio serviciosNewServicio : serviciosNew) {
                 if (!serviciosOld.contains(serviciosNewServicio)) {
-                    Categoria oldCategoriasOfServiciosNewServicio = serviciosNewServicio.getCategorias();
-                    serviciosNewServicio.setCategorias(categoria);
+                    serviciosNewServicio.getCategorias().add(categoria);
                     serviciosNewServicio = em.merge(serviciosNewServicio);
-                    if (oldCategoriasOfServiciosNewServicio != null && !oldCategoriasOfServiciosNewServicio.equals(categoria)) {
-                        oldCategoriasOfServiciosNewServicio.getServicios().remove(serviciosNewServicio);
-                        oldCategoriasOfServiciosNewServicio = em.merge(oldCategoriasOfServiciosNewServicio);
-                    }
                 }
             }
             for (Salon salonesOldSalon : salonesOld) {
@@ -218,7 +208,7 @@ public class CategoriaJpaController implements Serializable {
             }
             List<Servicio> servicios = categoria.getServicios();
             for (Servicio serviciosServicio : servicios) {
-                serviciosServicio.setCategorias(null);
+                serviciosServicio.getCategorias().remove(categoria);
                 serviciosServicio = em.merge(serviciosServicio);
             }
             List<Salon> salones = categoria.getSalones();

@@ -16,10 +16,12 @@ public class DetalleReserva implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToMany(mappedBy = "detalleReservaHabitacion")
+    
+    @OneToMany(mappedBy = "detalleReservasHabitaciones")
     private List<Habitacion> Listahabitaciones;
-    @OneToMany(mappedBy = "detalleReservaSalon")
+    @OneToMany(mappedBy = "detalleReservasSalones")
     private List<Salon> listaSalones;
+    
     private Date checkIn;
     private Date chackOut;
     @OneToOne

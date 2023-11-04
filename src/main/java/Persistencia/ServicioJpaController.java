@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Persistencia;
 
 import java.io.Serializable;
@@ -16,11 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
+
 public class ServicioJpaController implements Serializable {
 
     public ServicioJpaController(EntityManagerFactory emf) {
@@ -30,6 +24,10 @@ public class ServicioJpaController implements Serializable {
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+    
+    public ServicioJpaController() {
+        emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
 
     public void create(Servicio servicio) {

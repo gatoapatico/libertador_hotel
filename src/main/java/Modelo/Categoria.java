@@ -31,6 +31,7 @@ public class Categoria implements Serializable{
     @Temporal(TemporalType.DATE)
     private Date fechaBaja;
     private String estado;
+    
     @ManyToMany(mappedBy = "categorias")
     private List<Servicio> servicios;
     

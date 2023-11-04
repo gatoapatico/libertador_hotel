@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Persistencia;
 
 import java.io.Serializable;
@@ -16,11 +12,8 @@ import Persistencia.exceptions.NonexistentEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
 public class HabitacionJpaController implements Serializable {
 
     public HabitacionJpaController(EntityManagerFactory emf) {
@@ -31,7 +24,11 @@ public class HabitacionJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
+    public HabitacionJpaController() {
+        emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
+    }
+    
     public void create(Habitacion habitacion) {
         EntityManager em = null;
         try {
@@ -42,19 +39,19 @@ public class HabitacionJpaController implements Serializable {
                 tipoHabitacion = em.getReference(tipoHabitacion.getClass(), tipoHabitacion.getId());
                 habitacion.setTipoHabitacion(tipoHabitacion);
             }
-            DetalleReserva detalleReservaHabitacion = habitacion.getDetalleReservaHabitacion();
-            if (detalleReservaHabitacion != null) {
-                detalleReservaHabitacion = em.getReference(detalleReservaHabitacion.getClass(), detalleReservaHabitacion.getId());
-                habitacion.setDetalleReservaHabitacion(detalleReservaHabitacion);
+            DetalleReserva detalleReservasHabitaciones = habitacion.getDetalleReservasHabitaciones();
+            if (detalleReservasHabitaciones != null) {
+                detalleReservasHabitaciones = em.getReference(detalleReservasHabitaciones.getClass(), detalleReservasHabitaciones.getId());
+                habitacion.setDetalleReservasHabitaciones(detalleReservasHabitaciones);
             }
             em.persist(habitacion);
             if (tipoHabitacion != null) {
                 tipoHabitacion.getHabitaciones().add(habitacion);
                 tipoHabitacion = em.merge(tipoHabitacion);
             }
-            if (detalleReservaHabitacion != null) {
-                detalleReservaHabitacion.getListahabitaciones().add(habitacion);
-                detalleReservaHabitacion = em.merge(detalleReservaHabitacion);
+            if (detalleReservasHabitaciones != null) {
+                detalleReservasHabitaciones.getListahabitaciones().add(habitacion);
+                detalleReservasHabitaciones = em.merge(detalleReservasHabitaciones);
             }
             em.getTransaction().commit();
         } finally {
@@ -72,15 +69,15 @@ public class HabitacionJpaController implements Serializable {
             Habitacion persistentHabitacion = em.find(Habitacion.class, habitacion.getId());
             Categoria tipoHabitacionOld = persistentHabitacion.getTipoHabitacion();
             Categoria tipoHabitacionNew = habitacion.getTipoHabitacion();
-            DetalleReserva detalleReservaHabitacionOld = persistentHabitacion.getDetalleReservaHabitacion();
-            DetalleReserva detalleReservaHabitacionNew = habitacion.getDetalleReservaHabitacion();
+            DetalleReserva detalleReservasHabitacionesOld = persistentHabitacion.getDetalleReservasHabitaciones();
+            DetalleReserva detalleReservasHabitacionesNew = habitacion.getDetalleReservasHabitaciones();
             if (tipoHabitacionNew != null) {
                 tipoHabitacionNew = em.getReference(tipoHabitacionNew.getClass(), tipoHabitacionNew.getId());
                 habitacion.setTipoHabitacion(tipoHabitacionNew);
             }
-            if (detalleReservaHabitacionNew != null) {
-                detalleReservaHabitacionNew = em.getReference(detalleReservaHabitacionNew.getClass(), detalleReservaHabitacionNew.getId());
-                habitacion.setDetalleReservaHabitacion(detalleReservaHabitacionNew);
+            if (detalleReservasHabitacionesNew != null) {
+                detalleReservasHabitacionesNew = em.getReference(detalleReservasHabitacionesNew.getClass(), detalleReservasHabitacionesNew.getId());
+                habitacion.setDetalleReservasHabitaciones(detalleReservasHabitacionesNew);
             }
             habitacion = em.merge(habitacion);
             if (tipoHabitacionOld != null && !tipoHabitacionOld.equals(tipoHabitacionNew)) {
@@ -91,13 +88,13 @@ public class HabitacionJpaController implements Serializable {
                 tipoHabitacionNew.getHabitaciones().add(habitacion);
                 tipoHabitacionNew = em.merge(tipoHabitacionNew);
             }
-            if (detalleReservaHabitacionOld != null && !detalleReservaHabitacionOld.equals(detalleReservaHabitacionNew)) {
-                detalleReservaHabitacionOld.getListahabitaciones().remove(habitacion);
-                detalleReservaHabitacionOld = em.merge(detalleReservaHabitacionOld);
+            if (detalleReservasHabitacionesOld != null && !detalleReservasHabitacionesOld.equals(detalleReservasHabitacionesNew)) {
+                detalleReservasHabitacionesOld.getListahabitaciones().remove(habitacion);
+                detalleReservasHabitacionesOld = em.merge(detalleReservasHabitacionesOld);
             }
-            if (detalleReservaHabitacionNew != null && !detalleReservaHabitacionNew.equals(detalleReservaHabitacionOld)) {
-                detalleReservaHabitacionNew.getListahabitaciones().add(habitacion);
-                detalleReservaHabitacionNew = em.merge(detalleReservaHabitacionNew);
+            if (detalleReservasHabitacionesNew != null && !detalleReservasHabitacionesNew.equals(detalleReservasHabitacionesOld)) {
+                detalleReservasHabitacionesNew.getListahabitaciones().add(habitacion);
+                detalleReservasHabitacionesNew = em.merge(detalleReservasHabitacionesNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -133,10 +130,10 @@ public class HabitacionJpaController implements Serializable {
                 tipoHabitacion.getHabitaciones().remove(habitacion);
                 tipoHabitacion = em.merge(tipoHabitacion);
             }
-            DetalleReserva detalleReservaHabitacion = habitacion.getDetalleReservaHabitacion();
-            if (detalleReservaHabitacion != null) {
-                detalleReservaHabitacion.getListahabitaciones().remove(habitacion);
-                detalleReservaHabitacion = em.merge(detalleReservaHabitacion);
+            DetalleReserva detalleReservasHabitaciones = habitacion.getDetalleReservasHabitaciones();
+            if (detalleReservasHabitaciones != null) {
+                detalleReservasHabitaciones.getListahabitaciones().remove(habitacion);
+                detalleReservasHabitaciones = em.merge(detalleReservasHabitaciones);
             }
             em.remove(habitacion);
             em.getTransaction().commit();

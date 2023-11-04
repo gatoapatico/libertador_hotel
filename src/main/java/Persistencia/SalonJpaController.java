@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Persistencia;
 
 import java.io.Serializable;
@@ -10,16 +6,14 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Modelo.Categoria;
+import Modelo.DetalleReserva;
 import Modelo.Salon;
 import Persistencia.exceptions.NonexistentEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
 public class SalonJpaController implements Serializable {
 
     public SalonJpaController(EntityManagerFactory emf) {
@@ -31,6 +25,10 @@ public class SalonJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    public SalonJpaController() {
+        emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
+    }
+    
     public void create(Salon salon) {
         EntityManager em = null;
         try {
@@ -41,10 +39,19 @@ public class SalonJpaController implements Serializable {
                 tipoSalon = em.getReference(tipoSalon.getClass(), tipoSalon.getId());
                 salon.setTipoSalon(tipoSalon);
             }
+            DetalleReserva detalleReservasSalones = salon.getDetalleReservasSalones();
+            if (detalleReservasSalones != null) {
+                detalleReservasSalones = em.getReference(detalleReservasSalones.getClass(), detalleReservasSalones.getId());
+                salon.setDetalleReservasSalones(detalleReservasSalones);
+            }
             em.persist(salon);
             if (tipoSalon != null) {
                 tipoSalon.getSalones().add(salon);
                 tipoSalon = em.merge(tipoSalon);
+            }
+            if (detalleReservasSalones != null) {
+                detalleReservasSalones.getListaSalones().add(salon);
+                detalleReservasSalones = em.merge(detalleReservasSalones);
             }
             em.getTransaction().commit();
         } finally {
@@ -62,9 +69,15 @@ public class SalonJpaController implements Serializable {
             Salon persistentSalon = em.find(Salon.class, salon.getId());
             Categoria tipoSalonOld = persistentSalon.getTipoSalon();
             Categoria tipoSalonNew = salon.getTipoSalon();
+            DetalleReserva detalleReservasSalonesOld = persistentSalon.getDetalleReservasSalones();
+            DetalleReserva detalleReservasSalonesNew = salon.getDetalleReservasSalones();
             if (tipoSalonNew != null) {
                 tipoSalonNew = em.getReference(tipoSalonNew.getClass(), tipoSalonNew.getId());
                 salon.setTipoSalon(tipoSalonNew);
+            }
+            if (detalleReservasSalonesNew != null) {
+                detalleReservasSalonesNew = em.getReference(detalleReservasSalonesNew.getClass(), detalleReservasSalonesNew.getId());
+                salon.setDetalleReservasSalones(detalleReservasSalonesNew);
             }
             salon = em.merge(salon);
             if (tipoSalonOld != null && !tipoSalonOld.equals(tipoSalonNew)) {
@@ -74,6 +87,14 @@ public class SalonJpaController implements Serializable {
             if (tipoSalonNew != null && !tipoSalonNew.equals(tipoSalonOld)) {
                 tipoSalonNew.getSalones().add(salon);
                 tipoSalonNew = em.merge(tipoSalonNew);
+            }
+            if (detalleReservasSalonesOld != null && !detalleReservasSalonesOld.equals(detalleReservasSalonesNew)) {
+                detalleReservasSalonesOld.getListaSalones().remove(salon);
+                detalleReservasSalonesOld = em.merge(detalleReservasSalonesOld);
+            }
+            if (detalleReservasSalonesNew != null && !detalleReservasSalonesNew.equals(detalleReservasSalonesOld)) {
+                detalleReservasSalonesNew.getListaSalones().add(salon);
+                detalleReservasSalonesNew = em.merge(detalleReservasSalonesNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -108,6 +129,11 @@ public class SalonJpaController implements Serializable {
             if (tipoSalon != null) {
                 tipoSalon.getSalones().remove(salon);
                 tipoSalon = em.merge(tipoSalon);
+            }
+            DetalleReserva detalleReservasSalones = salon.getDetalleReservasSalones();
+            if (detalleReservasSalones != null) {
+                detalleReservasSalones.getListaSalones().remove(salon);
+                detalleReservasSalones = em.merge(detalleReservasSalones);
             }
             em.remove(salon);
             em.getTransaction().commit();
