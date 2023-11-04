@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Salon implements Serializable {
@@ -22,7 +24,9 @@ public class Salon implements Serializable {
     @JoinColumn(name = "Id_categoria_salon")
     private Categoria tipoSalon;
     private int maxPersonas;
+    @Temporal(TemporalType.DATE)
     private Date fechaAlta;
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
     private int clienteActual;
     private String estado;

@@ -23,7 +23,7 @@ public class Servicio implements Serializable{
     private double costo;
     @Temporal(TemporalType.DATE)
     private Date fechaAlta;
-        @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
     private String estado;
     @ManyToMany

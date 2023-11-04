@@ -34,5 +34,11 @@ public class Controller {
     public void cambiarEstadoUsuario(int id_editar) {
         controlP.cambiarEstadoUsuario(id_editar);
     }
+    
+    public List<Usuario> buscarUsuarioRepetido(String email, int dni){
+        return controlP.buscarUsuarioRepetido(email,dni);
+    }
+    
+   
    
 }

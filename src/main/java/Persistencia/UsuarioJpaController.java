@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Persistencia;
 
 import java.io.Serializable;
@@ -14,10 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/**
- *
- * @author Bruno Sandoval
- */
+
 public class UsuarioJpaController implements Serializable {
 
     public UsuarioJpaController(EntityManagerFactory emf) {
@@ -28,11 +29,9 @@ public class UsuarioJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
     public UsuarioJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
-
     public void create(Usuario usuario) {
         if (usuario.getReservas() == null) {
             usuario.setReservas(new ArrayList<Reserva>());
@@ -186,15 +185,16 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
+
     public void cambiarEstadoUsuario(int id) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            
+
             // Buscar el usuario por su ID
             Usuario usuario = em.find(Usuario.class, id);
-            
+
             if (usuario != null) {
                 // Cambiar el estado del usuario (suponiendo que tienes un atributo 'estado' en tu clase Usuario)
                 if ("Activo".equals(usuario.getEstado())) {
@@ -202,10 +202,10 @@ public class UsuarioJpaController implements Serializable {
                 } else {
                     usuario.setEstado("Activo");
                 }
-                
+
                 // Realizar la actualización en la base de datos
                 em.merge(usuario);
-                
+
                 em.getTransaction().commit();
             } else {
                 throw new NonexistentEntityException("El usuario con ID " + id + " no existe.");
@@ -222,4 +222,20 @@ public class UsuarioJpaController implements Serializable {
             }
         }
     }
+
+    public List<Usuario> buscarUsuariosPorEmailYDNI(String email, int dni) {
+    EntityManager em = getEntityManager();
+    try {
+        Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email OR u.DNI = :dni");
+        query.setParameter("email", email);
+        query.setParameter("dni", dni);
+
+        List<Usuario> resultados = query.getResultList();
+
+        return resultados;
+    } finally {
+        em.close();
+    }
+}
+
 }

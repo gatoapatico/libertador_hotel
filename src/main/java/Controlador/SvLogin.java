@@ -49,7 +49,7 @@ public class SvLogin extends HttpServlet {
                     misesion.setAttribute("Email", usuario);
                     misesion.setAttribute("tipo", usu.getTipo());
                     misesion.setAttribute("Nombre", usu.getNombre());
-                    response.sendRedirect("admin.jsp");
+                    response.sendRedirect("index.jsp");
                     usuarioEncontrado = true;
                     break;
                 }

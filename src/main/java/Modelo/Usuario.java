@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 @Entity
 public class Usuario implements Serializable{
     @Id
@@ -20,7 +22,9 @@ public class Usuario implements Serializable{
     private String apellido;
     private int telefono;
     private String tipo;
+    @Temporal(TemporalType.DATE)
     private Date fechaAlta;
+    @Temporal(TemporalType.DATE)
     private Date fechaBaja;
     private String estado;
     @OneToMany(mappedBy = "usuario")
