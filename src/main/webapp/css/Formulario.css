@@ -61,7 +61,7 @@ form .password i {
   margin-top: 30px;
 }
 
-.submit-btn input {
+.submit-btn input, .submit-btn a {
   color: white;
   border: none;
   height: auto;
@@ -75,9 +75,10 @@ form .password i {
   transition: 0.2s ease;
 }
 
-.submit-btn input:hover {
+.submit-btn input,.submit-btn a:hover {
   background: #333050;
 }
+
 @media screen and (max-width: 1200px) {
   .form-container {
     width: 90%; /* Ancho del formulario */

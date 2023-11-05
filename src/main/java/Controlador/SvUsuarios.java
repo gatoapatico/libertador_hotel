@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controlador;
 
 import Modelo.Controller;
@@ -42,7 +38,6 @@ public class SvUsuarios extends HttpServlet {
 
                 misesion = request.getSession();
                 misesion.setAttribute("listaUsuarios", listaUsuarios);
-
                 response.sendRedirect("Administrador/usuarios.jsp");
 
                 break;
@@ -52,15 +47,22 @@ public class SvUsuarios extends HttpServlet {
 
                 misesion = request.getSession();
                 misesion.setAttribute("DatoUsuarioEditar", usu);
-
-                // Redirige a la página de usuarios.jsp
-                response.sendRedirect("Administrador/usuarios.jsp");
+                response.sendRedirect("SvUsuarios?Op=Listar");
                 break;
             case "Eliminar":
                 int id_eliminar = Integer.parseInt(request.getParameter("Id"));
                 usu = control.traerUsuario(id_eliminar);
                 control.cambiarEstadoUsuario(id_eliminar);
-                response.sendRedirect("Administrador/usuarios.jsp");
+                response.sendRedirect("SvUsuarios?Op=Listar");
+                break;
+            case "Nuevo":
+                int id_nuevo = Integer.parseInt(request.getParameter("Id"));
+                usu = null;
+
+                misesion = request.getSession();
+                misesion.setAttribute("DatoUsuarioEditar", usu);
+                response.sendRedirect("SvUsuarios?Op=Listar");
+                
                 break;
 
         }
@@ -70,25 +72,28 @@ public class SvUsuarios extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("txtEmail");
-        String contrasena = request.getParameter("txtContrasena");
-        String nombre = request.getParameter("txtNombre");
-        String apellido = request.getParameter("txtApellido");
-        int telefono = Integer.parseInt(request.getParameter("txtTelefono"));
-        String tipo = request.getParameter("txtTipo");
+        String btnActualizar = request.getParameter("btnActualizar");
 
-        Usuario usu = new Usuario();
-        usu.setEmail(email);
-        usu.setContrasena(contrasena);
-        usu.setNombre(nombre);
-        usu.setApellido(apellido);
-        usu.setTelefono(telefono);
-        usu.setTipo(tipo);
+        if (btnActualizar != null) {
+            int idUsuario = Integer.parseInt(request.getParameter("Id"));
+            Usuario usuarioEditar = control.traerUsuario(idUsuario);
 
-        control.editarUsuario(usu);
-        response.sendRedirect("SvUsuarios?Op=Listar");
+            // Actualiza los datos del usuario con los valores del formulario
+            usuarioEditar.setEmail(request.getParameter("txtEmail"));
+            usuarioEditar.setContrasena(request.getParameter("txtContrasena"));
+            usuarioEditar.setNombre(request.getParameter("txtNombre"));
+            usuarioEditar.setApellido(request.getParameter("txtApellido"));
+            usuarioEditar.setTelefono(Integer.parseInt(request.getParameter("txtTelefono")));
+            usuarioEditar.setTipo(request.getParameter("txtTipo"));
+         
+            control.editarUsuario(usuarioEditar);
 
+            // Redirige a la página de usuarios.jsp
+            response.sendRedirect("SvUsuarios?Op=Listar");
+        } 
     }
+
+
 
     @Override
     public String getServletInfo() {

@@ -24,8 +24,9 @@
                 </tr>
             </thead>
             <tbody>
-                <%  List<Usuario> listaUsuarios = (List) request.getSession().getAttribute("listaUsuarios");
-                    for (Usuario usu : listaUsuarios) {
+                <%  List<Usuario> listaUsuarios = (List<Usuario>) request.getSession().getAttribute("listaUsuarios");
+                    if (listaUsuarios != null) { // Verifica si listaUsuarios no es nulo
+                        for (Usuario usu : listaUsuarios) {
                 %>
                 <tr>
                     <td data-label="id"><%= usu.getId()%></td>
@@ -57,23 +58,46 @@
                         %>
                     </td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="../SvUsuarios?Op=Eliminar&Id=<%=usu.getId()%>"><%=usu.getEstado()%></a>
+                        <a class="buttonTabla" href="../SvUsuarios?Op=Eliminar&Id=<%=usu.getId()%>" id="boton1" onclick="toggleColor(this)"><%=usu.getEstado()%></a>
                         <a class="buttonTabla" href="../SvUsuarios?Op=Modificar&Id=<%=usu.getId()%>">Modificar</a>
-                        
+
 
                     </td>
                 </tr>
-                <%}%>
+                <%  }
+                } else { %>
+                <tr>
+                    <td data-label="id"></td>
+                    <td data-label="email"></td>
+                    <td data-label="contrasena"></td>
+                    <td data-label="dni"></td>
+                    <td data-label="nombre"></td>
+                    <td data-label="apellido"></td>
+                    <td data-label="telefono"></td>
+                    <td data-label="tipo"></td>
+                    <td data-label="fecha de Alta"></td>
+                    <td data-label="fecha de Baja"></td>
+                    <td data-label="estado">
+                        <a class="buttonTabla" href="#"></a>
+                        <a class="buttonTabla" href="#"></a>
+
+
+                    </td>
+                </tr>
+
+                <%}
+                %>
+
 
             </tbody>
         </table>
     </div>
     <div class="form-container">
-        <%  Usuario usu = (Usuario)request.getSession().getAttribute("DatoUsuarioEditar");
+        <%  Usuario usu = (Usuario) request.getSession().getAttribute("DatoUsuarioEditar");
             if (usu != null) {%>
-        <form action="../SvUsuarios" method="POST">
+        <form action="../SvUsuarios" method="post" id="miFormulario">
             <h2>Modificar Usuario</h2>
-            <div class="form-group numberHabitacion">
+            <div class="form-group email">
                 <label for="email">Email</label>
                 <input type="email" id="txtEmail" name="txtEmail"  value="<%= usu.getEmail()%>" required>
             </div>
@@ -104,15 +128,21 @@
                     <option value="Cliente">Cliente</option>
                 </select>
             </div>
-          
+
             <div class="form-group submit-btn">
-                <input type="submit" name="btnCrear" value="Modificar">
+                <input type="submit" name="btnActualizar" value="Actualizar">
+                <input type="hidden" name="Id" value="<%= usu.getId()%>">
             </div>
+            <div class="form-group submit-btn">
+    <a href="../SvUsuarios?Op=Nuevo&Id=<%=usu.getId()%>">Nuevo Usuario</a>
+</div>
+
+
         </form>
-       <%} else{%>
+        <%} else {%>
         <form action="../SvRegistrarUsuario" method="post">
             <h2>Crear Usuario</h2>
-            <div class="form-group numberHabitacion">
+            <div class="form-group email">
                 <label for="email">Email</label>
                 <input type="email" id="txtEmail" name="txtEmail" placeholder="Ingrese un email" required>
             </div>
@@ -149,7 +179,7 @@
             </div>
             <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
             <input type="hidden" id="fechaActual" name="fechaActual">
-          
+
             <div class="form-group submit-btn">
                 <input type="submit" name="btnCrear" value="Crear">
             </div>
@@ -159,9 +189,11 @@
         <div class="error-message">
             <%= errorMessage%>
         </div>
-        <% }} %>
-       
+        <% }
+            }%>
+
     </div>
 </div>
+
 
 <%@include file="include/footerAdministrador.jsp" %>
