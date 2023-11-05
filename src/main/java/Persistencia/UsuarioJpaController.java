@@ -13,6 +13,7 @@ import Modelo.Reserva;
 import Modelo.Usuario;
 import Persistencia.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -187,41 +188,43 @@ public class UsuarioJpaController implements Serializable {
     }
 
     public void cambiarEstadoUsuario(int id) throws NonexistentEntityException, Exception {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+    EntityManager em = null;
+    try {
+        em = getEntityManager();
+        em.getTransaction().begin();
 
-            // Buscar el usuario por su ID
-            Usuario usuario = em.find(Usuario.class, id);
+        // Buscar el usuario por su ID
+        Usuario usuario = em.find(Usuario.class, id);
 
-            if (usuario != null) {
-                // Cambiar el estado del usuario (suponiendo que tienes un atributo 'estado' en tu clase Usuario)
-                if ("Activo".equals(usuario.getEstado())) {
-                    usuario.setEstado("Desactivado");
-                } else {
-                    usuario.setEstado("Activo");
-                }
-
-                // Realizar la actualización en la base de datos
-                em.merge(usuario);
-
-                em.getTransaction().commit();
+        if (usuario != null) {
+            // Cambiar el estado del usuario (suponiendo que tienes un atributo 'estado' en tu clase Usuario)
+            if ("Activo".equals(usuario.getEstado())) {
+                usuario.setEstado("Desactivado");
+                usuario.setFechaBaja(new Date()); // Establecer la fecha de baja al momento actual
             } else {
-                throw new NonexistentEntityException("El usuario con ID " + id + " no existe.");
+                usuario.setEstado("Activo");
+                usuario.setFechaBaja(null); // Reiniciar la fecha de baja a null
             }
-        } catch (Exception ex) {
-            String msg = ex.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                throw new NonexistentEntityException("Error al cambiar el estado del usuario.");
-            }
-            throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+
+            // Realizar la actualización en la base de datos
+            em.merge(usuario);
+
+            em.getTransaction().commit();
+        } else {
+            throw new NonexistentEntityException("El usuario con ID " + id + " no existe.");
+        }
+    } catch (Exception ex) {
+        String msg = ex.getLocalizedMessage();
+        if (msg == null || msg.length() == 0) {
+            throw new NonexistentEntityException("Error al cambiar el estado del usuario.");
+        }
+        throw ex;
+    } finally {
+        if (em != null) {
+            em.close();
         }
     }
+}
 
     public List<Usuario> buscarUsuariosPorEmailYDNI(String email, int dni) {
     EntityManager em = getEntityManager();

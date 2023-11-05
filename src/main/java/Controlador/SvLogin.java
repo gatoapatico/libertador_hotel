@@ -3,7 +3,6 @@ package Controlador;
 import Modelo.Controller;
 import Modelo.Usuario;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,41 +22,35 @@ public class SvLogin extends HttpServlet {
        
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
-
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Usuario> listaUsuarios = new ArrayList<>();
-        listaUsuarios = control.traerUsuarios();
-
+        List<Usuario> listaUsuarios = control.traerUsuarios();
         HttpSession misesion = request.getSession();
+        String usuario = request.getParameter("txtNombre");
+        String contrasena = request.getParameter("txtContra");
 
-        if (request.getParameter("btnIngresar") != null) {
-            String usuario = request.getParameter("txtNombre");
-            String contrasena = request.getParameter("txtContra");
-
-            boolean usuarioEncontrado = false;
-            for (Usuario usu : listaUsuarios) {
-                if (usu.getEmail().equals(usuario) && usu.getContrasena().equals(contrasena)) {
-                    misesion.setAttribute("Email", usuario);
-                    misesion.setAttribute("tipo", usu.getTipo());
-                    misesion.setAttribute("Nombre", usu.getNombre());
-                    response.sendRedirect("index.jsp");
-                    usuarioEncontrado = true;
-                    break;
-                }
-            }
-            if (!usuarioEncontrado) {
-                response.sendRedirect("login.jsp");
+        boolean usuarioEncontrado = false;
+        for (Usuario usu : listaUsuarios) {
+            if (usu.getEmail().equals(usuario) && usu.getContrasena().equals(contrasena)) {
+                misesion.setAttribute("Email", usuario);
+                misesion.setAttribute("tipo", usu.getTipo());
+                misesion.setAttribute("Nombre", usu.getNombre());
+                response.sendRedirect("SvUsuarios?Op=Listar");
                 
+                usuarioEncontrado = true;
+                break;
             }
+        }
+        if (!usuarioEncontrado) {
+            // Usuario no encontrado, muestra un mensaje de error y redirige de nuevo al inicio de sesión.
+            response.sendRedirect("login.jsp?error=Credenciales incorrectas. Intente nuevamente.");
         }
     }
 
