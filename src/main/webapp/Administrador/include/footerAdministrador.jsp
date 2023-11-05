@@ -1,6 +1,6 @@
 	
 
-
+<script src="../js/funcionesLoginScript.js"></script>
 <script src="../js/jquery-3.7.0.js"></script>
 <script src="../js/jquery.dataTables.min.js"></script>
 <script src="../js/HeaderScript.js"></script>

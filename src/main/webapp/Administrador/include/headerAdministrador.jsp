@@ -1,8 +1,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setHeader("Expires", "0");
 
+    HttpSession ses = request.getSession();
+    if (ses.getAttribute("Nombre") == null && ses.getAttribute("tipo") == null) {
+        response.sendRedirect("Login.jsp");
+    }
+%>
+<html lang="en" dir="ltr">
     <head>
         <meta charset="UTF-8">
         <title> Administrador </title>
@@ -78,8 +86,10 @@
                             <a href="#">Log Out</a>
                             <i class='bx bxs-user logout-arrow arrow '></i>
                             <ul class="logout-sub-menu sub-menu">
-                                <li><a href="#">Ver Datos</a></li>
-                                <li><a href="#">Cerrar Sesion</a></li>
+                                <li><a href="#">Bienvenido <%=ses.getAttribute("Nombre")%></a></li>
+                                <li><a class="dropdown-item" href="../login.jsp?cerrar=true">
+                                    Cerrar Sesion
+                                </a></li>
                             </ul>
                         </li>
                     </ul>

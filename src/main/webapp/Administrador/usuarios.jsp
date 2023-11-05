@@ -1,3 +1,8 @@
+<%@page import="Modelo.Usuario"%>
+<%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+
 <%@include file="include/headerAdministrador.jsp" %>
 <div class="container">
     <div class="container-table">
@@ -19,72 +24,144 @@
                 </tr>
             </thead>
             <tbody>
+                <%  List<Usuario> listaUsuarios = (List) request.getSession().getAttribute("listaUsuarios");
+                    for (Usuario usu : listaUsuarios) {
+                %>
                 <tr>
-                    <td data-label="id">1</td>
-                    <td data-label="email">bruno@gmail.com</td>
-                    <td data-label="contrasena">admin</td>
-                    <td data-label="dni">12345678</td>
-                    <td data-label="nombre">bruno</td>
-                    <td data-label="apellido">sandoval</td>
-                    <td data-label="telefono">987654321</td>
-                    <td data-label="tipo">Administrador</td>
-                    <td data-label="fech de Alta">23-05-2023</td>
-                    <td data-label="fecha de Baja">23-05-2023</td>
+                    <td data-label="id"><%= usu.getId()%></td>
+                    <td data-label="email"><%= usu.getEmail()%></td>
+                    <td data-label="contrasena"><%= usu.getContrasena()%></td>
+                    <td data-label="dni"><%= usu.getDNI()%></td>
+                    <td data-label="nombre"><%= usu.getNombre()%></td>
+                    <td data-label="apellido"><%= usu.getApellido()%></td>
+                    <td data-label="telefono"><%= usu.getTelefono()%></td>
+                    <td data-label="tipo"><%= usu.getTipo()%></td>
+                    <td data-label="fecha de Alta">
+                        <%
+                            Date fechaAlta = usu.getFechaAlta();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            String fechaAltaFormateada = dateFormat.format(fechaAlta);
+                            out.print(fechaAltaFormateada);
+                        %>
+                    </td>
+                    <td data-label="fecha de Baja">
+                        <%
+                            Date fechaBaja = usu.getFechaBaja();
+                            if (fechaBaja != null) {
+                                SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                                String fechaBajaFormateada = dateFormat1.format(fechaBaja);
+                                out.print(fechaBajaFormateada);
+                            } else {
+                                out.print("No hay fecha de baja");
+                            }
+                        %>
+                    </td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="#" id="boton1" onclick="toggleColor(this)">Desactivar</a>
-                        <a class="buttonTabla" href="#">Modificar</a>
+                        <a class="buttonTabla" href="../SvUsuarios?Op=Eliminar&Id=<%=usu.getId()%>"><%=usu.getEstado()%></a>
+                        <a class="buttonTabla" href="../SvUsuarios?Op=Modificar&Id=<%=usu.getId()%>">Modificar</a>
+                        
+
                     </td>
                 </tr>
+                <%}%>
 
             </tbody>
         </table>
     </div>
     <div class="form-container">
-        <form action="">
-            <h2>Crea-Modifica Usuarios</h2>
+        <%  Usuario usu = (Usuario)request.getSession().getAttribute("DatoUsuarioEditar");
+            if (usu != null) {%>
+        <form action="../SvUsuarios" method="POST">
+            <h2>Modificar Usuario</h2>
             <div class="form-group numberHabitacion">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Ingrese un email" required>
+                <input type="email" id="txtEmail" name="txtEmail"  value="<%= usu.getEmail()%>" required>
             </div>
             <div class="form-group password">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Ingrese una contraseña">
+                <label for="password">Contraseña</label>
+                <input type="password" id="txtContrasena" name="txtContrasena" value="<%= usu.getContrasena()%>">
                 <i id="pass-toggle-btn" class="bx bx-show"></i>
-            </div>
-            <div class="form-group dni">
-                <label for="dni">DNI</label>
-                <input type="number" id="dni" placeholder="Ingrese un numero de DNI" maxlength="8" required>
             </div>
             <div class="form-group nombre">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" placeholder="Ingrese un nombre" required>
+                <input type="text" id="txtNombre" name="txtNombre" value="<%= usu.getNombre()%>" required>
             </div>
             <div class="form-group apellido">
                 <label for="apellido">Apellido</label>
-                <input type="text" id="apellido" placeholder="Ingrese un apellido" required>
+                <input type="text" id="txtApellido" name="txtApellido" value="<%= usu.getApellido()%>"  required>
             </div>
             <div class="form-group telefono">
                 <label for="telefono">Telefono</label>
-                <input type="tel" id="telefono" placeholder="Ingrese un numero de telefono" maxlength="9" required>
+                <input type="tel" id="txtTelefono" name="txtTelefono" value="<%= usu.getTelefono()%>" maxlength="9" required>
             </div>
 
             <div class="form-group Tipo">
                 <label for="Tipo">Tipo de usuario</label>
-                <select id="Tipo" required>
-                    <option value="" selected disabled>Seleccione el tipo usuario</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                <select id="txtTipo" name="txtTipo" required>
+                    <option value="<%= usu.getTipo()%>" selected disabled=""><%= usu.getTipo()%></option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Cliente">Cliente</option>
                 </select>
             </div>
-            <div class="form-group dechaAlta">
-                <label for="dechaAlta">Fecha de Alta</label>
-                <input type="date" id="dechaAlta" placeholder="Seleccione la fecha de hoy" required>
-            </div>
+          
             <div class="form-group submit-btn">
-                <input type="submit" value="Crear/Actualizar">
+                <input type="submit" name="btnCrear" value="Modificar">
             </div>
         </form>
+       <%} else{%>
+        <form action="../SvRegistrarUsuario" method="post">
+            <h2>Crear Usuario</h2>
+            <div class="form-group numberHabitacion">
+                <label for="email">Email</label>
+                <input type="email" id="txtEmail" name="txtEmail" placeholder="Ingrese un email" required>
+            </div>
+            <div class="form-group password">
+                <label for="password">Contraseña</label>
+                <input type="password" id="txtContrasena" name="txtContrasena" placeholder="Ingrese una contraseña">
+                <i id="pass-toggle-btn" class="bx bx-show"></i>
+            </div>
+            <div class="form-group dni">
+                <label for="dni">DNI</label>
+                <input type="tel" id="txtDNI" name="txtDNI" placeholder="Ingrese un numero de DNI" maxlength="8" required>
+            </div>
+            <div class="form-group nombre">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="txtNombre" name="txtNombre" placeholder="Ingrese un nombre" required>
+            </div>
+            <div class="form-group apellido">
+                <label for="apellido">Apellido</label>
+                <input type="text" id="txtApellido" name="txtApellido" placeholder="Ingrese un apellido" required>
+            </div>
+            <div class="form-group telefono">
+                <label for="telefono">Telefono</label>
+                <input type="tel" id="txtTelefono" name="txtTelefono" placeholder="Ingrese un numero de telefono" maxlength="9" required>
+            </div>
+
+            <div class="form-group Tipo">
+                <label for="Tipo">Tipo de usuario</label>
+                <select id="txtTipo" name="txtTipo" required>
+                    <option value="" selected disabled>Seleccione el tipo usuario</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+            </div>
+            <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
+            <input type="hidden" id="fechaActual" name="fechaActual">
+          
+            <div class="form-group submit-btn">
+                <input type="submit" name="btnCrear" value="Crear">
+            </div>
+        </form>
+        <% String errorMessage = (String) request.getSession().getAttribute("error"); %>
+        <% if (errorMessage != null) {%>
+        <div class="error-message">
+            <%= errorMessage%>
+        </div>
+        <% }} %>
+       
     </div>
 </div>
+
 <%@include file="include/footerAdministrador.jsp" %>

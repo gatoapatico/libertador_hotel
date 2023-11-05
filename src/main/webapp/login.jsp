@@ -1,4 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    HttpSession ses = request.getSession();
+    if (request.getParameter("cerrar") != null) {
+        session.invalidate();
+        response.sendRedirect("login.jsp");
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,12 +18,7 @@
     </head>
 
     <body>
-        <%-- Verifica si hay un mensaje de error en la variable de sesión --%>
-    <c:if test="${not empty sessionScope.registroError}">
-        <div class="Usuario ya registrado">
-            ${sessionScope.registroError}
-        </div>
-    </c:if>
+
     <header>
         <div class="navbar">
             <div class="nav-links">
@@ -48,17 +50,6 @@
                     <div class="input-field">
                         <input type="password" id="txtContra" name="txtContra">
                         <label>Contraseña</label>
-                    </div>
-                    <br>
-                    <div class="captcha">
-                        <label for="captcha-input">Captcha</label>
-                        <div class="preview"></div>
-                        <div class="captcha-form">
-                            <input type="text" id="captcha-form" placeholder="Ingresa el captcha" >
-                            <button class="captcha-refresh" type="button">
-                                <i class="bx bx-refresh icon"></i>
-                            </button>
-                        </div>
                     </div>
                     <button type="submit" id="login-btn" value="Inicia sesion">Inicia sesion</button>
                     <input type="hidden" name="formSubmitted" value="true">
@@ -116,7 +107,7 @@
                             <a href="terminosYcondiciones.jsp" class="option">Términos y condiciones</a>
                         </label>
                     </div>
-                    <button id="registro-btn" type="submit">Registrate</button>
+                    <button id="registro-btn" name="btnRegistrar" type="submit">Registrate</button>
                 </form>
                 <div class="bottom-link">
                     ¿Ya eres parte de nosotros? 
@@ -125,20 +116,7 @@
             </div>
         </div>
     </div>
-    <script>
-        //Fecha Actual
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtén la fecha actual
-            var fechaHoy = new Date();
-
-            // Formatea la fecha como "YYYY-MM-DD" (puedes ajustar el formato según tus necesidades)
-            var fechaFormateada = fechaHoy.getFullYear() + "-" + (fechaHoy.getMonth() + 1).toString().padStart(2, "0") + "-" + fechaHoy.getDate().toString().padStart(2, "0");
-
-            // Establece la fecha formateada como valor del campo de entrada oculto
-            document.getElementById("fechaActual").value = fechaFormateada;
-        });
-        
-    </script>
+    <script src="js/funcionesLoginScript.js"></script>
     <script src="js/loginScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 

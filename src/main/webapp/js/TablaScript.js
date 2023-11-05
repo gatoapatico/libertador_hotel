@@ -1,17 +1,3 @@
-
-$('table').DataTable();
-function toggleColor(button) {
-    button.classList.toggle('active');
-    // Obtiene el contenido actual del botón
-    const contenidoActual = button.innerHTML;
-
-    // Cambia el texto del botón según el contenido actual
-    if (contenidoActual === 'Activar') {
-        button.innerHTML = 'Desactivar';
-    } else {
-        button.innerHTML = 'Activar';
-    }
-}
 const passwordInput = document.getElementById("password");
 const passToggleBtn = document.getElementById("pass-toggle-btn");
 passToggleBtn.addEventListener('click', () => {
