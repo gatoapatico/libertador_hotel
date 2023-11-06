@@ -13,11 +13,11 @@ import Modelo.Categoria;
 import Modelo.Servicio;
 import Persistencia.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 
 public class ServicioJpaController implements Serializable {
 
@@ -29,9 +29,11 @@ public class ServicioJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+
     public ServicioJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
+
     public void create(Servicio servicio) {
         if (servicio.getCategorias() == null) {
             servicio.setCategorias(new ArrayList<Categoria>());
@@ -175,5 +177,58 @@ public class ServicioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public void cambiarEstadoServicio(int id) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Buscar el servicio por su ID
+            Servicio servicio = em.find(Servicio.class, id);
+
+            if (servicio != null) {
+                // Cambiar el estado del servicio (suponiendo que tienes un atributo 'estado' en tu clase Servicio)
+                if ("Activo".equals(servicio.getEstado())) {
+                    servicio.setEstado("Desactivado");
+                    servicio.setFechaBaja(new Date()); // Establecer la fecha de baja al momento actual
+                } else {
+                    servicio.setEstado("Activo");
+                    servicio.setFechaBaja(null); // Reiniciar la fecha de baja a null
+                }
+
+                // Realizar la actualización en la base de datos
+                em.merge(servicio);
+
+                em.getTransaction().commit();
+            } else {
+                throw new NonexistentEntityException("El servicio con ID " + id + " no existe.");
+            }
+        } catch (Exception ex) {
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                throw new NonexistentEntityException("Error al cambiar el estado del servicio.");
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public List<Servicio> buscarServiciosPorNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT s FROM Servicio s WHERE s.nombre = :nombre");
+            query.setParameter("nombre", nombre);
+
+            List<Servicio> resultados = query.getResultList();
+
+            return resultados;
+        } finally {
+            em.close();
+        }
+    }
+
 }
