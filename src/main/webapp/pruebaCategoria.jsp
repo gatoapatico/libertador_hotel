@@ -110,7 +110,7 @@
             </div>
             <div class="form-group servicios">
                 <label for="servicios">Servicios</label>
-                <select id="serviciosSeleccionados" name="serviciosSeleccionados" >
+                <select id="servicios" name="servicios" >
                     <option value="" selected disabled >Seleccione los servicios</option>
                     <%  Controller control = new Controller();
                         List<Servicio> listaServicios = new ArrayList<>();
@@ -119,36 +119,36 @@
                         for (Servicio servi : listaServicios) {
                             if (servi.getEstado().equals("Activo")) {
                     %>
-                    <option value="<%= servi.getId()%>"><%= servi.getNombre()%></option>
+                    <option value="<%= servi.getNombre()%>"><%= servi.getNombre()%></option>
                     <%
                             }
                         }
                     %>
                 </select>
             </div>
-            <div class="form-group selected-services">
-                <label for="selectedServices">Servicios Seleccionados</label>
-                <ul id="selectedServices">
-                    <% List<Servicio> serviciosSeleccionados = (List<Servicio>) request.getSession().getAttribute("serviciosSeleccionados"); %>
-                    <% if (serviciosSeleccionados != null) {
-                            for (Servicio servicio : serviciosSeleccionados) {%>
-                    <li><%= servicio.getNombre()%></li>
-                        <% }
-                        } else { %>
-                    <li>No hay servicios seleccionados</li>
-                        <% } %>
-                </ul>
-            </div>
+            <textarea class="form-group" name="serviciosSeleccionados" >
+                <%
+                    List<Servicio> servicios = cate.getServicios(); // Obtén la lista de servicios de la categoría
+                    for (Servicio servicio : servicios) {
+                %>
+                            <div>
+                    <%= servicio.getNombre()%> <!-- Imprime el nombre del servicio -->
+                                <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
+                            </div>
+                <%
+                    }
+                %>
+            </textarea>
             <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
-            <input type="hidden" id="fechaActual" name="fechaActual" value="<%=cate.getFechaAlta()%>">
+            <input type="hidden" id="fechaActual" name="fechaActual">
             <div class="form-group submit-btn">
-                <input type="submit" name="btnActualizar" value="Crear">
+                <input type="submit" name="btnActualizar" value="Actualizar">
+                <input type="hidden" name="Id" value="<%= cate.getId()%>">
             </div>
             <div class="form-group submit-btn">
                 <a href="../SvCategorias?Op=Nuevo&Id=<%=cate.getId()%>">Nuevo Servicio</a>
             </div>
         </form>
-
         <%} else {%>
         <form action="../SvCategorias" method="post">
             <h2>Crea Categoria</h2>
@@ -162,7 +162,7 @@
             </div>
             <div class="form-group servicios">
                 <label for="servicios">Servicios</label>
-                <select id="serviciosSeleccionados" name="serviciosSeleccionados" >
+                <select id="servicios" name="serviciosSeleccionados" required>
                     <option value="" selected disabled >Seleccione los servicios</option>
                     <%  Controller control = new Controller();
                         List<Servicio> listaServicios = new ArrayList<>();
@@ -180,16 +180,7 @@
             </div>
             <div class="form-group selected-services">
                 <label for="selectedServices">Servicios Seleccionados</label>
-                <ul id="selectedServices">
-                    <% List<Servicio> serviciosSeleccionados = (List<Servicio>) request.getSession().getAttribute("serviciosSeleccionados"); %>
-                    <% if (serviciosSeleccionados != null) {
-                            for (Servicio servicio : serviciosSeleccionados) {%>
-                    <li><%= servicio.getNombre()%></li>
-                        <% }
-                        } else { %>
-                    <li>No hay servicios seleccionados</li>
-                        <% } %>
-                </ul>
+                <textarea id="selectedServices" name="selectedServices" readonly></textarea>
             </div>
 
             <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
@@ -207,4 +198,19 @@
             }%>
     </div>
 </div>
+<script>
+    document.getElementById("servicios").addEventListener("change", function() {
+        var selectedServices = document.getElementById("servicios");
+        var selectedServicesText = document.getElementById("selectedServices");
+        var selectedOptions = selectedServices.selectedOptions;
+
+        var selectedServiceNames = [];
+        for (var i = 0; i < selectedOptions.length; i++) {
+            selectedServiceNames.push(selectedOptions[i].text);
+        }
+
+        selectedServicesText.value = selectedServiceNames.join("\n");
+    });
+</script>
+
 <%@include file="include/footerAdministrador.jsp" %>

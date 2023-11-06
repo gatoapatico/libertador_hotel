@@ -8,7 +8,6 @@ import Modelo.Categoria;
 import Modelo.Controller;
 import Modelo.Servicio;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,9 +47,11 @@ public class SvCategorias extends HttpServlet {
             case "Modificar":
                 int id_editar = Integer.parseInt(request.getParameter("Id"));
                 Categoria cate = control.traerCategoria(id_editar);
+                
 
                 misesion = request.getSession();
                 misesion.setAttribute("DatoCategoriaEditar", cate);
+                
                 response.sendRedirect("SvCategorias?Op=Listar");
                 break;
             case "Eliminar":
@@ -62,30 +63,47 @@ public class SvCategorias extends HttpServlet {
             case "Nuevo":
                 int id_nuevo = Integer.parseInt(request.getParameter("Id"));
                 cate = null;
-
                 misesion = request.getSession();
                 misesion.setAttribute("DatoCategoriaEditar", cate);
                 response.sendRedirect("SvCategorias?Op=Listar");
                 break;
+            case "AgregarServicios":
+                int idservi = Integer.parseInt(request.getParameter("id"));
+                Servicio servicio = control.traerServicio(idservi);
 
+                if (servicio != null) {
+                    List<Servicio> listaServiciosSeleccionados = (List<Servicio>) misesion.getAttribute("serviciosSeleccionados");
+
+                    if (listaServiciosSeleccionados == null) {
+                        listaServiciosSeleccionados = new ArrayList<>();
+                    }
+
+                    listaServiciosSeleccionados.add(servicio);
+
+                    // Guardar la lista de servicios seleccionados en la sesión
+                    misesion.setAttribute("serviciosSeleccionados", listaServiciosSeleccionados);
+                    response.sendRedirect("SvCategorias?Op=Listar");
+                }
+                break;
         }
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession misesion = request.getSession();
         String btnCrear = request.getParameter("btnCrear");
         String btnActualizar = request.getParameter("btnActualizar");
+        String nombre = request.getParameter("nombre");
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        List<Servicio> listaServiciosSeleccionados = (List<Servicio>) misesion.getAttribute("serviciosSeleccionados");
+        String estado = request.getParameter("txtEstado");
+        String fechaActualStr = request.getParameter("fechaActual");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaActual = null; // Inicializa la fecha como nula
 
-        if (btnCrear != null) {
-            String nombre = request.getParameter("nombre");
-            int cantidad = Integer.parseInt(request.getParameter("cantidad"));
-            String[] serviciosSeleccionados = request.getParameterValues("serviciosSeleccionados");
-            String estado = request.getParameter("txtEstado");
-            String fechaActualStr = request.getParameter("fechaActual");
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date fechaActual = null; // Inicializa la fecha como nula
+        if (btnActualizar != null) {
 
             try {
                 fechaActual = dateFormat.parse(fechaActualStr); // Intenta analizar la fecha
@@ -93,29 +111,26 @@ public class SvCategorias extends HttpServlet {
                 // Maneja la excepción, por ejemplo, muestra un mensaje de error o registra el problema
                 e.printStackTrace();
             }
-
             Categoria cate = new Categoria();
             cate.setNombre(nombre);
             cate.setCantPersonas(cantidad);
             cate.setEstado(estado);
-
-            // Obtén los nombres de los servicios seleccionados
-            // Lista para almacenar los servicios asociados
             List<Servicio> serviciosAsociados = new ArrayList<>();
 
             // Itera a través de los nombres y asocia los servicios con la categoría
-            if (serviciosSeleccionados != null && serviciosSeleccionados.length > 0) {
-                serviciosAsociados = new ArrayList<>();
-                for (String servicioId : serviciosSeleccionados) {
-                    int idServicio = Integer.parseInt(servicioId);
+            if (listaServiciosSeleccionados != null) {
+                double sumaCostoServicios = 0.0;
+                for (Servicio servicio : listaServiciosSeleccionados) {
+                    int idServicio = servicio.getId(); // Obtén el ID del servicio directamente
+                    sumaCostoServicios += servicio.getCosto();
                     Servicio serviObj = control.traerServicio(idServicio);
                     serviciosAsociados.add(serviObj);
+
                 }
+                cate.setCostoServicios(sumaCostoServicios);
                 cate.setServicios(serviciosAsociados);
             }
-            // Verifica si el usuario está repetido
             List<Categoria> categoriasRepetidas = control.buscarCategoriasPorNombre(nombre);
-
             if (!categoriasRepetidas.isEmpty()) {
                 String errorMessage = "La categoría ya existe"; // Mensaje de error
                 request.getSession().setAttribute("error", errorMessage); // Guarda el mensaje de error en la sesión
@@ -124,12 +139,54 @@ public class SvCategorias extends HttpServlet {
                 if (fechaActual != null) {
                     cate.setFechaAlta(fechaActual);
                 }
+                misesion.removeAttribute("serviciosSeleccionados");
                 control.crearCategoria(cate);
                 response.sendRedirect("SvCategorias?Op=Listar");
             }
-        } else if (btnActualizar != null) {
-            // Lógica para actualizar una categoría (si es necesario)
+        
+
+
+        } else if (btnCrear != null) {
+            try {
+                fechaActual = dateFormat.parse(fechaActualStr); // Intenta analizar la fecha
+            } catch (ParseException e) {
+                // Maneja la excepción, por ejemplo, muestra un mensaje de error o registra el problema
+                e.printStackTrace();
+            }
+            Categoria cate = new Categoria();
+            cate.setNombre(nombre);
+            cate.setCantPersonas(cantidad);
+            cate.setEstado(estado);
+            List<Servicio> serviciosAsociados = new ArrayList<>();
+
+            // Itera a través de los nombres y asocia los servicios con la categoría
+            if (listaServiciosSeleccionados != null) {
+                double sumaCostoServicios = 0.0;
+                for (Servicio servicio : listaServiciosSeleccionados) {
+                    int idServicio = servicio.getId(); // Obtén el ID del servicio directamente
+                    sumaCostoServicios += servicio.getCosto();
+                    Servicio serviObj = control.traerServicio(idServicio);
+                    serviciosAsociados.add(serviObj);
+
+                }
+                cate.setCostoServicios(sumaCostoServicios);
+                cate.setServicios(serviciosAsociados);
+            }
+            List<Categoria> categoriasRepetidas = control.buscarCategoriasPorNombre(nombre);
+            if (!categoriasRepetidas.isEmpty()) {
+                String errorMessage = "La categoría ya existe"; // Mensaje de error
+                request.getSession().setAttribute("error", errorMessage); // Guarda el mensaje de error en la sesión
+                response.sendRedirect("SvCategorias?Op=Listar");
+            } else {
+                if (fechaActual != null) {
+                    cate.setFechaAlta(fechaActual);
+                }
+                misesion.removeAttribute("serviciosSeleccionados");
+                control.crearCategoria(cate);
+                response.sendRedirect("SvCategorias?Op=Listar");
+            }
         }
+
     }
 
     @Override

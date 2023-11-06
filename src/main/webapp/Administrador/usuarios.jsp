@@ -120,7 +120,7 @@
             <div class="form-group Tipo">
                 <label for="Tipo">Tipo de usuario</label>
                 <select id="txtTipo" name="txtTipo" required>
-                    <option value="<%= usu.getTipo()%>" selected disabled=""><%= usu.getTipo()%></option>
+                    <option value="<%= usu.getTipo()%>" ><%= usu.getTipo()%></option>
                     <option value="Administrador">Administrador</option>
                     <option value="Recepcionista">Recepcionista</option>
                     <option value="Cliente">Cliente</option>
