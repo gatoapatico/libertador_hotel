@@ -36,6 +36,7 @@ public class Controller {
     public List<Usuario> buscarUsuarioRepetido(String email, int dni){
         return controlP.buscarUsuarioRepetido(email,dni);
     }
+    //Seccion servicios
     public void crearServicio(Servicio servi){
         controlP.crearServicio(servi);
     }
@@ -61,6 +62,39 @@ public class Controller {
     
     public List<Servicio> buscarServiciosPorNombre(String nombre){
         return controlP.buscarServiciosPorNombre(nombre);
+    }
+    public Servicio buscarServicioPorNombre(String nombre) {
+        return controlP.buscarServicioPorNombre(nombre);
+    }
+    //Seccion categoria
+    public void crearCategoria(Categoria cate){
+        controlP.crearCategoria(cate);
+    }
+    
+    public List<Categoria> traerCategorias(){
+        return controlP.traerCategorias();
+    }
+    
+    public void borrarCategoria(int id_eliminar) {
+        controlP.borrarCategoria(id_eliminar);
+    }
+
+    public Categoria traerCategoria(int id_editar) {
+        return controlP.traerCategoria(id_editar);
+    }
+
+    public void editarCategoria(Categoria cate) {
+        controlP.editarCategoria(cate);
+    }
+    public void cambiarEstadoCategoria(int id_editar) {
+        controlP.cambiarEstadoCategoria(id_editar);
+    }
+    
+    public List<Categoria> buscarCategoriasPorNombre(String nombre){
+        return controlP.buscarCategoriasPorNombre(nombre);
+    }
+    public Categoria buscarCategoriaPorNombre(String nombre) {
+        return controlP.buscarCategoriaPorNombre(nombre);
     }
      
 }

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 public class ServicioJpaController implements Serializable {
@@ -230,5 +231,21 @@ public class ServicioJpaController implements Serializable {
             em.close();
         }
     }
+    public Servicio buscarServicioPorNombre(String nombre) {
+    EntityManager em = getEntityManager();
+    try {
+        Query query = em.createQuery("SELECT s FROM Servicio s WHERE s.nombre = :nombre");
+        query.setParameter("nombre", nombre);
+
+        Servicio servicioEncontrado = (Servicio) query.getSingleResult();
+
+        return servicioEncontrado;
+    } catch (NoResultException e) {
+        return null; // Retorna null si no encuentra ningún servicio con ese nombre
+    } finally {
+        em.close();
+    }
+}
+
 
 }
