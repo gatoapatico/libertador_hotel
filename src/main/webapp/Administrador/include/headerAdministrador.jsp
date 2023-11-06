@@ -63,24 +63,10 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">Servicios</a>
-                            <i class='bx bxs-chevron-down servicio-arrow arrow '></i>
-                            <ul class="servicio-sub-menu sub-menu">
-                                <li><a href="#">Dynamic Clock</a></li>
-                                <li><a href="#">Form Validation</a></li>
-                                <li><a href="#">Card Slider</a></li>
-                                <li><a href="#">Complete Website</a></li>
-                            </ul>
+                            <a href="../SvServicios?Op=Listar">Servicios</a>
                         </li>
                         <li>
-                            <a href="#">Usuarios</a>
-                            <i class='bx bxs-chevron-down usuario-arrow arrow '></i>
-                            <ul class="usuario-sub-menu sub-menu">
-                                <li><a href="#">Dynamic Clock</a></li>
-                                <li><a href="#">Form Validation</a></li>
-                                <li><a href="#">Card Slider</a></li>
-                                <li><a href="#">Complete Website</a></li>
-                            </ul>
+                            <a href="../SvUsuarios?Op=Listar">Usuarios</a>
                         </li>
                         <li>
                             <a href="#">Log Out</a>

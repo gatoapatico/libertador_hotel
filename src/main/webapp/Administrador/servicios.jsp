@@ -1,75 +1,8 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="Modelo.Servicio"%>
+<%@page import="java.util.List"%>
 <%@include file="include/headerAdministrador.jsp" %>
-<div class="navbar">
-    <i class='bx bx-menu'></i>
-    <div class="logo"><a href="#">Hotel El Libertador</a></div>
-    <div class="nav-links">
-        <div class="sidebar-logo">
-            <span class="logo-name">Administracion</span>
-            <i class='bx bx-x'></i>
-        </div>
-        <ul class="links">
-            <li>
-                <a href="#">Habitaciones</a>
-                <i class='bx bxs-chevron-down habitacion-arrow arrow  '></i>
-                <ul class="habitacion-sub-menu sub-menu">
-                    <li><a href="#">Crear habitacion</a></li>
-                    <li><a href="#">Modificar Habitacion</a></li>
-                    <li><a href="#">Habitacion</a></li>
-
-                </ul>
-            </li>
-            <li>
-                <a href="#">Salones</a>
-                <i class='bx bxs-chevron-down salon-arrow arrow '></i>
-                <ul class="salon-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Categorias</a>
-                <i class='bx bxs-chevron-down categoria-arrow arrow '></i>
-                <ul class="categoria-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Servicios</a>
-                <i class='bx bxs-chevron-down servicio-arrow arrow '></i>
-                <ul class="servicio-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Usuarios</a>
-                <i class='bx bxs-chevron-down usuario-arrow arrow '></i>
-                <ul class="usuario-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Log Out</a>
-                <i class='bx bxs-user logout-arrow arrow '></i>
-                <ul class="logout-sub-menu sub-menu">
-                    <li><a href="#">Ver Datos</a></li>
-                    <li><a href="#">Cerrar Sesion</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-</header>
 <div class="container">
     <div class="container-table">	
         <div class="titulo">Servicios</div>	
@@ -85,50 +18,100 @@
                 </tr>
             </thead>
             <tbody>
+                <%  List<Servicio> listaServicios = (List<Servicio>) request.getSession().getAttribute("listaServicios");
+                    if (listaServicios != null) { 
+                        for (Servicio servi : listaServicios) {
+                %>
                 <tr>
-                    <td data-label="id">1</td>
-                    <td data-label="nombre">Desayuno</td>
-                    <td data-label="costo">s/100</td>
-                    <td data-label="fech de Alta">23-05-2023</td>
-                    <td data-label="fecha de Baja">23-05-2023</td>
+                    <td data-label="id"><%=servi.getId()%></td>
+                    <td data-label="nombre"><%=servi.getNombre()%></td>
+                    <td data-label="costo"><%=servi.getCosto()%></td>
+                    <td data-label="fech de Alta"><%
+                            Date fechaAlta = servi.getFechaAlta();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            String fechaAltaFormateada = dateFormat.format(fechaAlta);
+                            out.print(fechaAltaFormateada);
+                        %></td>
+                    <td data-label="fecha de Baja"><%
+                            Date fechaBaja = servi.getFechaBaja();
+                            if (fechaBaja != null) {
+                                SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                                String fechaBajaFormateada = dateFormat1.format(fechaBaja);
+                                out.print(fechaBajaFormateada);
+                            } else {
+                                out.print("No hay fecha de baja, servicio activo");
+                            }
+                        %></td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="#" id="boton1" onclick="toggleColor(this)">Desactivar</a>
+                        <a class="buttonTabla" href="../SvServicios?Op=Eliminar&Id=<%=servi.getId()%>" ><%=servi.getEstado()%></a>
+                        <a class="buttonTabla" href="../SvServicios?Op=Modificar&Id=<%=servi.getId()%>">Modificar</a>
+                    </td>
+                </tr>
+                <%  }
+                } else { %>
+                <tr>
+                    <td data-label="id"></td>
+                    <td data-label="nombre"></td>
+                    <td data-label="costo"></td>
+                    <td data-label="fech de Alta"></td>
+                    <td data-label="fecha de Baja"></td>
+                    <td data-label="estado">
+                        <a class="buttonTabla" href="#" >Desactivar</a>
                         <a class="buttonTabla" href="#" >Modificar</a>
                     </td>
                 </tr>
-                <tr>
-                    <td data-label="id">2</td>
-                    <td data-label="nombre">Almuerzo</td>
-                    <td data-label="costo">s/120</td>
-                    <td data-label="fech de Alta">23-05-2023</td>
-                    <td data-label="fecha de Baja">23-05-2023</td>
-                    <td data-label="estado">
-                        <a class="buttonTabla" href="#" id="boton1" onclick="toggleColor(this)">Desactivar</a>
-                        <a class="buttonTabla" href="#" >Modificar</a>
-                    </td>
-                </tr>
+                <%}
+                %>
             </tbody>
         </table>
     </div>
     <div class="form-container">
-        <form action="">
-            <h2>Crea-Modifica Servicios</h2>
+        <%  Servicio servi = (Servicio) request.getSession().getAttribute("DatoServicioEditar");
+            if (servi != null) {%>
+            <form action="../SvServicios" method="post">
+            <h2>Modificar Servicio</h2>
             <div class="form-group nombre">
                 <label for="nombre">Nombre del servicio</label>
-                <input type="text" id="nombre" placeholder="Ingrese el nombre del servicio" required>
+                <input type="text" id="nombre" name="nombre" value="<%=servi.getNombre()%>">
             </div>
             <div class="form-group precio">
                 <label for="precio">Precio del servicio</label>
-                <input type="number" id="precio" placeholder="Ingrese el precio del servicio" required>
+                <input type="number" id="precio" name="precio" value="<%=servi.getCosto()%>">
             </div>
-            <div class="form-group dechaAlta">
-                <label for="dechaAlta">Fecha de Alta</label>
-                <input type="date" id="dechaAlta" placeholder="Seleccione la fecha de hoy" required>
+            <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
+            <input type="hidden" id="fechaActual" name="fechaActual">
+            <div class="form-group submit-btn">
+                <input type="submit" name="btnActualizar" value="Actualizar">
+                <input type="hidden" name="Id" value="<%= servi.getId()%>">
             </div>
             <div class="form-group submit-btn">
-                <input type="submit" value="Crear/Actualizar">
+                <a href="../SvServicios?Op=Nuevo&Id=<%=servi.getId()%>">Nuevo Servicio</a>
             </div>
         </form>
+        <%} else {%>
+        <form action="../SvServicios" method="post">
+            <h2>Crea Servicio</h2>
+            <div class="form-group nombre">
+                <label for="nombre">Nombre del servicio</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del servicio" required>
+            </div>
+            <div class="form-group precio">
+                <label for="precio">Precio del servicio</label>
+                <input type="number" id="precio" name="precio" placeholder="Ingrese el precio del servicio" required>
+            </div>
+            <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
+            <input type="hidden" id="fechaActual" name="fechaActual">
+            <div class="form-group submit-btn">
+                <input type="submit" name="btnCrear" value="Crear">
+            </div>
+        </form>
+        <% String errorMessage = (String) request.getSession().getAttribute("error"); %>
+        <% if (errorMessage != null) {%>
+        <div class="error-message">
+            <%= errorMessage%>
+        </div>
+        <% }
+            }%>
     </div>
 </div>
 <%@include file="include/footerAdministrador.jsp" %>

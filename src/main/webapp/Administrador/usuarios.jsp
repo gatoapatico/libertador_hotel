@@ -53,15 +53,13 @@
                                 String fechaBajaFormateada = dateFormat1.format(fechaBaja);
                                 out.print(fechaBajaFormateada);
                             } else {
-                                out.print("No hay fecha de baja");
+                                out.print("No hay fecha de baja, usuario activo");
                             }
                         %>
                     </td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="../SvUsuarios?Op=Eliminar&Id=<%=usu.getId()%>" id="boton1" onclick="toggleColor(this)"><%=usu.getEstado()%></a>
+                        <a class="buttonTabla" href="../SvUsuarios?Op=Eliminar&Id=<%=usu.getId()%>" ><%=usu.getEstado()%></a>
                         <a class="buttonTabla" href="../SvUsuarios?Op=Modificar&Id=<%=usu.getId()%>">Modificar</a>
-
-
                     </td>
                 </tr>
                 <%  }
@@ -78,8 +76,8 @@
                     <td data-label="fecha de Alta"></td>
                     <td data-label="fecha de Baja"></td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="#"></a>
-                        <a class="buttonTabla" href="#"></a>
+                        <a class="buttonTabla" href="#" >Desactivar</a>
+                        <a class="buttonTabla" href="#" >Modificar</a>
 
 
                     </td>
@@ -134,8 +132,8 @@
                 <input type="hidden" name="Id" value="<%= usu.getId()%>">
             </div>
             <div class="form-group submit-btn">
-    <a href="../SvUsuarios?Op=Nuevo&Id=<%=usu.getId()%>">Nuevo Usuario</a>
-</div>
+                <a href="../SvUsuarios?Op=Nuevo&Id=<%=usu.getId()%>">Nuevo Usuario</a>
+            </div>
 
 
         </form>

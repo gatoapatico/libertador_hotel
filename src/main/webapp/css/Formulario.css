@@ -57,7 +57,7 @@ form .password i {
   text-align: center;
 }
 
-.submit-btn {
+.submit-btn, .submit-btn a {
   margin-top: 30px;
 }
 
