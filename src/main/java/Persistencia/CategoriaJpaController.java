@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Persistencia;
 
 import Modelo.Categoria;
@@ -16,8 +12,10 @@ import java.util.List;
 import Modelo.Salon;
 import Modelo.Habitacion;
 import Persistencia.exceptions.NonexistentEntityException;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 public class CategoriaJpaController implements Serializable {
@@ -30,6 +28,7 @@ public class CategoriaJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+
     public CategoriaJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
@@ -275,5 +274,73 @@ public class CategoriaJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public void cambiarEstadoCategoria(int id) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Buscar la categoría por su ID
+            Categoria categoria = em.find(Categoria.class, id);
+
+            if (categoria != null) {
+                // Cambiar el estado de la categoría (suponiendo que tienes un atributo 'estado' en tu clase Categoria)
+                if ("Activo".equals(categoria.getEstado())) {
+                    categoria.setEstado("Desactivado");
+                    categoria.setFechaBaja(new Date()); // Establecer la fecha de baja al momento actual
+                } else {
+                    categoria.setEstado("Activo");
+                    categoria.setFechaBaja(null); // Reiniciar la fecha de baja a null
+                }
+
+                // Realizar la actualización en la base de datos
+                em.merge(categoria);
+
+                em.getTransaction().commit();
+            } else {
+                throw new NonexistentEntityException("La categoría con ID " + id + " no existe.");
+            }
+        } catch (Exception ex) {
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                throw new NonexistentEntityException("Error al cambiar el estado de la categoría.");
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public List<Categoria> buscarCategoriasPorNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT c FROM Categoria c WHERE c.nombre = :nombre");
+            query.setParameter("nombre", nombre);
+
+            List<Categoria> resultados = query.getResultList();
+
+            return resultados;
+        } finally {
+            em.close();
+        }
+    }
+    public Categoria buscarCategoriaPorNombre(String nombre) {
+    EntityManager em = getEntityManager();
+    try {
+        Query query = em.createQuery("SELECT c FROM Categoria c WHERE c.nombre = :nombre");
+        query.setParameter("nombre", nombre);
+
+        Categoria categoriaEncontrada = (Categoria) query.getSingleResult();
+
+        return categoriaEncontrada;
+    } catch (NoResultException e) {
+        return null; // Retorna null si no encuentra ninguna categoría con ese nombre
+    } finally {
+        em.close();
+    }
+}
+
 }

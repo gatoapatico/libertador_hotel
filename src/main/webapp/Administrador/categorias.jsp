@@ -1,75 +1,12 @@
+<%@page import="Modelo.Controller"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="Modelo.Servicio"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="Modelo.Categoria"%>
+<%@page import="java.util.List"%>
 <%@include file="include/headerAdministrador.jsp" %>
-<div class="navbar">
-    <i class='bx bx-menu'></i>
-    <div class="logo"><a href="#">Hotel El Libertador</a></div>
-    <div class="nav-links">
-        <div class="sidebar-logo">
-            <span class="logo-name">Administracion</span>
-            <i class='bx bx-x'></i>
-        </div>
-        <ul class="links">
-            <li>
-                <a href="#">Habitaciones</a>
-                <i class='bx bxs-chevron-down habitacion-arrow arrow  '></i>
-                <ul class="habitacion-sub-menu sub-menu">
-                    <li><a href="#">Crear habitacion</a></li>
-                    <li><a href="#">Modificar Habitacion</a></li>
-                    <li><a href="#">Habitacion</a></li>
 
-                </ul>
-            </li>
-            <li>
-                <a href="#">Salones</a>
-                <i class='bx bxs-chevron-down salon-arrow arrow '></i>
-                <ul class="salon-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Categorias</a>
-                <i class='bx bxs-chevron-down categoria-arrow arrow '></i>
-                <ul class="categoria-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Servicios</a>
-                <i class='bx bxs-chevron-down servicio-arrow arrow '></i>
-                <ul class="servicio-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Usuarios</a>
-                <i class='bx bxs-chevron-down usuario-arrow arrow '></i>
-                <ul class="usuario-sub-menu sub-menu">
-                    <li><a href="#">Dynamic Clock</a></li>
-                    <li><a href="#">Form Validation</a></li>
-                    <li><a href="#">Card Slider</a></li>
-                    <li><a href="#">Complete Website</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">Log Out</a>
-                <i class='bx bxs-user logout-arrow arrow '></i>
-                <ul class="logout-sub-menu sub-menu">
-                    <li><a href="#">Ver Datos</a></li>
-                    <li><a href="#">Cerrar Sesion</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-</header>
 <div class="container">
     <div class="container-table">	
         <div class="titulo">Categorias de Habitaciones y Salones</div>	
@@ -88,65 +25,192 @@
             </thead>
             <tbody>
                 <tr>
-                    <td data-label="id">1</td>
-                    <td data-label="nombre">King</td>
-                    <td data-label="costo">s/100</td>
+                    <%  List<Categoria> listaCategorias = (List<Categoria>) request.getSession().getAttribute("listaCategorias");
+                        if (listaCategorias != null) {
+                            for (Categoria cate : listaCategorias) {
+                    %>
+                    <td data-label="id"><%=cate.getId()%></td>
+                    <td data-label="nombre"><%=cate.getNombre()%></td>
+                    <td data-label="costo">s/<%=cate.getCostoServicios()%></td>     
                     <td data-label="servicio">
                         <div class="servicios-lista">
+                            <%
+                                List<Servicio> servicios = cate.getServicios(); // Obtén la lista de servicios de la categoría
+                                for (Servicio servicio : servicios) {
+                            %>
                             <div>
-                                Desayuno
+                                <%= servicio.getNombre()%> <!-- Imprime el nombre del servicio -->
                                 <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
                             </div>
-                            <div>
-                                Desayuno
-                                <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
-                            </div>
-                            <div>
-                                Desayuno
-                                <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
-                            </div>
+                            <%
+                                }
+                            %>
                         </div>
-                    </td>                        
-                    <td data-label="cantidad">2</td>
-                    <td data-label="fech de Alta">23-05-2023</td>
-                    <td data-label="fecha de Baja">23-05-2023</td>
+                    </td>
+                    <td data-label="cantidad"><%=cate.getCantPersonas()%></td>
+                    <td data-label="fech de Alta"><%
+                        Date fechaAlta = cate.getFechaAlta();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String fechaAltaFormateada = dateFormat.format(fechaAlta);
+                        out.print(fechaAltaFormateada);
+                        %></td>
+                    <td data-label="fecha de Baja"><%
+                        Date fechaBaja = cate.getFechaBaja();
+                        if (fechaBaja != null) {
+                            SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                            String fechaBajaFormateada = dateFormat1.format(fechaBaja);
+                            out.print(fechaBajaFormateada);
+                        } else {
+                            out.print("No hay fecha de baja, servicio activo");
+                        }
+                        %></td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="#" id="boton1" onclick="toggleColor(this)">Desactivar</a>
-                        <a class="buttonTabla" href="#" >Modificar</a>
+                        <a class="buttonTabla" href="../SvCategorias?Op=Eliminar&Id=<%=cate.getId()%>" ><%=cate.getEstado()%></a>
+                        <a class="buttonTabla" href="../SvCategorias?Op=Modificar&Id=<%=cate.getId()%>">Modificar</a>
                     </td>
                 </tr>
+                <%  }
+                } else { %>
+            <td data-label="id"></td>
+            <td data-label="nombre"></td>
+            <td data-label="costo">s/</td>
+            <td data-label="servicio">
+                <div class="servicios-lista">
+                    <div>
+                        Esta vacio
+                        <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
+                    </div>
+                </div>
+            </td>                        
+            <td data-label="cantidad"></td>
+            <td data-label="fech de Alta"></td>
+            <td data-label="fecha de Baja"></td>
+            <td data-label="estado">
+                <a class="buttonTabla" href="#" >Desactivar</a>
+                <a class="buttonTabla" href="#" >Modificar</a>
+            </td>
+            </tr>
+            <%}
+            %>
             </tbody>
         </table>
     </div>
     <div class="form-container">
-        <form action="">
-            <h2>Crea-Modifica Categorias</h2>
+        <%  Categoria cate = (Categoria) request.getSession().getAttribute("DatoCategoriaEditar");
+            if (cate != null) {%>
+        <form action="../SvCategorias" method="post">
+            <h2>Modifica Categoria</h2>
             <div class="form-group nombre">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" placeholder="Ingrese el nombre de la categoria" required>
+                <input type="text" id="nombre" name="nombre" value="<%=cate.getNombre()%>">
             </div>
             <div class="form-group cantidad">
                 <label for="cantidad">Cantidad</label>
-                <input type="number" id="cantidad" placeholder="Ingrese la cantidad de personas" required>
+                <input type="number" id="cantidad" name="cantidad" value="<%=cate.getCantPersonas()%>">
             </div>
             <div class="form-group servicios">
                 <label for="servicios">Servicios</label>
-                <select id="servicios" required>
+                <select id="servicios" name="servicios" >
                     <option value="" selected disabled >Seleccione los servicios</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <%  Controller control = new Controller();
+                        List<Servicio> listaServicios = new ArrayList<>();
+                        listaServicios = control.traerServicios();
+
+                        for (Servicio servi : listaServicios) {
+                            if (servi.getEstado().equals("Activo")) {
+                    %>
+                    <option value="<%= servi.getNombre()%>"><%= servi.getNombre()%></option>
+                    <%
+                            }
+                        }
+                    %>
                 </select>
             </div>
-            <textarea class="form-group" name="serviciosSelecionados" ></textarea>
-            <div class="form-group dechaAlta">
-                <label for="dechaAlta">Fecha de Alta</label>
-                <input type="date" id="dechaAlta" placeholder="Seleccione la fecha de hoy" required>
+            <textarea class="form-group" name="serviciosSeleccionados" >
+                <%
+                    List<Servicio> servicios = cate.getServicios(); // Obtén la lista de servicios de la categoría
+                    for (Servicio servicio : servicios) {
+                %>
+                            <div>
+                    <%= servicio.getNombre()%> <!-- Imprime el nombre del servicio -->
+                                <a class="servicioslista" href="#"><i class="bx bx-x"></i></a>
+                            </div>
+                <%
+                    }
+                %>
+            </textarea>
+            <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
+            <input type="hidden" id="fechaActual" name="fechaActual">
+            <div class="form-group submit-btn">
+                <input type="submit" name="btnActualizar" value="Actualizar">
+                <input type="hidden" name="Id" value="<%= cate.getId()%>">
             </div>
             <div class="form-group submit-btn">
-                <input type="submit" value="Crear/Actualizar">
+                <a href="../SvCategorias?Op=Nuevo&Id=<%=cate.getId()%>">Nuevo Servicio</a>
             </div>
         </form>
+        <%} else {%>
+        <form action="../SvCategorias" method="post">
+            <h2>Crea Categoria</h2>
+            <div class="form-group nombre">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre de la categoria" required>
+            </div>
+            <div class="form-group cantidad">
+                <label for="cantidad">Cantidad</label>
+                <input type="number" id="cantidad" name="cantidad" placeholder="Ingrese la cantidad de personas" required>
+            </div>
+            <div class="form-group servicios">
+                <label for="servicios">Servicios</label>
+                <select id="servicios" name="serviciosSeleccionados" required>
+                    <option value="" selected disabled >Seleccione los servicios</option>
+                    <%  Controller control = new Controller();
+                        List<Servicio> listaServicios = new ArrayList<>();
+                        listaServicios = control.traerServicios();
+
+                        for (Servicio servi : listaServicios) {
+                            if (servi.getEstado().equals("Activo")) {
+                    %>
+                    <option value="<%= servi.getId()%>"><%= servi.getNombre()%></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+            </div>
+            <div class="form-group selected-services">
+                <label for="selectedServices">Servicios Seleccionados</label>
+                <textarea id="selectedServices" name="selectedServices" readonly></textarea>
+            </div>
+
+            <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
+            <input type="hidden" id="fechaActual" name="fechaActual">
+            <div class="form-group submit-btn">
+                <input type="submit" name="btnCrear" value="Crear">
+            </div>
+        </form>
+        <% String errorMessage = (String) request.getSession().getAttribute("error"); %>
+        <% if (errorMessage != null) {%>
+        <div class="error-message">
+            <%= errorMessage%>
+        </div>
+        <% }
+            }%>
     </div>
 </div>
+<script>
+    document.getElementById("servicios").addEventListener("change", function() {
+        var selectedServices = document.getElementById("servicios");
+        var selectedServicesText = document.getElementById("selectedServices");
+        var selectedOptions = selectedServices.selectedOptions;
+
+        var selectedServiceNames = [];
+        for (var i = 0; i < selectedOptions.length; i++) {
+            selectedServiceNames.push(selectedOptions[i].text);
+        }
+
+        selectedServicesText.value = selectedServiceNames.join("\n");
+    });
+</script>
+
 <%@include file="include/footerAdministrador.jsp" %>

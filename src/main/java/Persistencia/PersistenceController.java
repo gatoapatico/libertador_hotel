@@ -11,6 +11,7 @@ public class PersistenceController {
 
     UsuarioJpaController usuJPA = new UsuarioJpaController();
     ServicioJpaController serviJPA=new ServicioJpaController();
+    CategoriaJpaController cateJPA=new CategoriaJpaController();
 
     public void crearUsuario(Usuario usu) {
         usuJPA.create(usu);
@@ -101,4 +102,56 @@ public class PersistenceController {
             return null; // 
         }
     }
+    public Servicio buscarServicioPorNombre(String nombre) {
+        return serviJPA.buscarServicioPorNombre(nombre);
+    }
+    // Metodos categorias
+    public void crearCategoria(Categoria cate) {
+        cateJPA.create(cate);
+    }
+    
+    public List<Categoria> traerCategorias() {
+        return cateJPA.findCategoriaEntities();
+    }
+    
+    public void borrarCategoria(int id_eliminar) {
+        try {
+            cateJPA.destroy(id_eliminar);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public Categoria traerCategoria(int id_editar) {
+        return cateJPA.findCategoria(id_editar);
+    }
+
+    public void editarCategoria(Categoria cate) {
+        try {
+            cateJPA.edit(cate);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void cambiarEstadoCategoria(int id) {
+        try {
+            cateJPA.cambiarEstadoCategoria(id);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<Categoria> buscarCategoriasPorNombre(String nombre) {
+        try {
+            return cateJPA.buscarCategoriasPorNombre(nombre);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+            return null; // 
+        }
+    }
+    public Categoria buscarCategoriaPorNombre(String nombre) {
+        return cateJPA.buscarCategoriaPorNombre(nombre);
+    }
+    
 }

@@ -53,14 +53,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">Categorias</a>
-                            <i class='bx bxs-chevron-down categoria-arrow arrow '></i>
-                            <ul class="categoria-sub-menu sub-menu">
-                                <li><a href="#">Dynamic Clock</a></li>
-                                <li><a href="#">Form Validation</a></li>
-                                <li><a href="#">Card Slider</a></li>
-                                <li><a href="#">Complete Website</a></li>
-                            </ul>
+                            <a href="../SvCategorias?Op=Listar">Categorias</a>
                         </li>
                         <li>
                             <a href="../SvServicios?Op=Listar">Servicios</a>
