@@ -22,7 +22,7 @@
                         <li>Galeria</li>
                     </ul>
                 </nav>
-                <button class="btn-reserva">RESERVA YA</button>
+                <a href="reserva.jsp" class="btn-reserva">RESERVA YA</a>
             </header>
             <section class="landing">
                 <div class="landing-content">
