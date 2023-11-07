@@ -47,11 +47,10 @@ public class SvCategorias extends HttpServlet {
             case "Modificar":
                 int id_editar = Integer.parseInt(request.getParameter("Id"));
                 Categoria cate = control.traerCategoria(id_editar);
-                
 
                 misesion = request.getSession();
                 misesion.setAttribute("DatoCategoriaEditar", cate);
-                
+
                 response.sendRedirect("SvCategorias?Op=Listar");
                 break;
             case "Eliminar":
@@ -77,9 +76,7 @@ public class SvCategorias extends HttpServlet {
                     if (listaServiciosSeleccionados == null) {
                         listaServiciosSeleccionados = new ArrayList<>();
                     }
-
                     listaServiciosSeleccionados.add(servicio);
-
                     // Guardar la lista de servicios seleccionados en la sesión
                     misesion.setAttribute("serviciosSeleccionados", listaServiciosSeleccionados);
                     response.sendRedirect("SvCategorias?Op=Listar");
@@ -95,6 +92,15 @@ public class SvCategorias extends HttpServlet {
         HttpSession misesion = request.getSession();
         String btnCrear = request.getParameter("btnCrear");
         String btnActualizar = request.getParameter("btnActualizar");
+
+        if (btnActualizar != null) {
+            actualizarCategoria(request, misesion, response);
+        } else if (btnCrear != null) {
+            crearCategoria(request, misesion, response);
+        }
+    }
+
+    private void actualizarCategoria(HttpServletRequest request, HttpSession misesion, HttpServletResponse response) throws IOException {
         String nombre = request.getParameter("nombre");
         int cantidad = Integer.parseInt(request.getParameter("cantidad"));
         List<Servicio> listaServiciosSeleccionados = (List<Servicio>) misesion.getAttribute("serviciosSeleccionados");
@@ -103,9 +109,7 @@ public class SvCategorias extends HttpServlet {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date fechaActual = null; // Inicializa la fecha como nula
 
-        if (btnActualizar != null) {
-
-            try {
+        try {
                 fechaActual = dateFormat.parse(fechaActualStr); // Intenta analizar la fecha
             } catch (ParseException e) {
                 // Maneja la excepción, por ejemplo, muestra un mensaje de error o registra el problema
@@ -143,14 +147,19 @@ public class SvCategorias extends HttpServlet {
                 control.crearCategoria(cate);
                 response.sendRedirect("SvCategorias?Op=Listar");
             }
-        
+    }
 
-
-        } else if (btnCrear != null) {
-            try {
+    private void crearCategoria(HttpServletRequest request, HttpSession misesion, HttpServletResponse response) throws IOException {
+        String nombre = request.getParameter("nombre");
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        List<Servicio> listaServiciosSeleccionados = (List<Servicio>) misesion.getAttribute("serviciosSeleccionados");
+        String estado = request.getParameter("txtEstado");
+        String fechaActualStr = request.getParameter("fechaActual");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaActual = null; // Inicializa la fecha como nula
+        try {
                 fechaActual = dateFormat.parse(fechaActualStr); // Intenta analizar la fecha
             } catch (ParseException e) {
-                // Maneja la excepción, por ejemplo, muestra un mensaje de error o registra el problema
                 e.printStackTrace();
             }
             Categoria cate = new Categoria();
@@ -185,8 +194,6 @@ public class SvCategorias extends HttpServlet {
                 control.crearCategoria(cate);
                 response.sendRedirect("SvCategorias?Op=Listar");
             }
-        }
-
     }
 
     @Override

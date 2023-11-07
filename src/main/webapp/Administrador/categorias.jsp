@@ -129,20 +129,26 @@
             <div class="form-group selected-services">
                 <label for="selectedServices">Servicios Seleccionados</label>
                 <ul id="selectedServices">
-                    <% List<Servicio> serviciosSeleccionados = (List<Servicio>) request.getSession().getAttribute("serviciosSeleccionados"); %>
-                    <% if (serviciosSeleccionados != null) {
-                            for (Servicio servicio : serviciosSeleccionados) {%>
+                    <% List<Servicio> serviciosSeleccionados = cate.getServicios(); %>
+                    <% if (serviciosSeleccionados != null && !serviciosSeleccionados.isEmpty()) {
+                            for (Servicio servicio : serviciosSeleccionados) {
+                    %>
                     <li><%= servicio.getNombre()%></li>
-                        <% }
-                        } else { %>
+                    <a class="remove-service" href="#" data-serviceid="<%= servicio.getId()%>">Eliminar</a>
+                        <%
+                            }
+                        } else {
+                        %>
                     <li>No hay servicios seleccionados</li>
-                        <% } %>
+                        <%
+                            }
+                        %>
                 </ul>
             </div>
             <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
             <input type="hidden" id="fechaActual" name="fechaActual" value="<%=cate.getFechaAlta()%>">
             <div class="form-group submit-btn">
-                <input type="submit" name="btnActualizar" value="Crear">
+                <input type="submit" name="btnActualizar" value="Modificar">
             </div>
             <div class="form-group submit-btn">
                 <a href="../SvCategorias?Op=Nuevo&Id=<%=cate.getId()%>">Nuevo Servicio</a>
