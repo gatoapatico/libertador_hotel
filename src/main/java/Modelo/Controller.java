@@ -97,4 +97,34 @@ public class Controller {
         return controlP.buscarCategoriaPorNombre(nombre);
     }
      
+    //Seccion Habitacion
+    public void crearHabitacion(Habitacion habi){
+        controlP.crearHabitacion(habi);
+    }
+    
+    public List<Habitacion> traerHabitaciones(){
+        return controlP.traerHabitaciones();
+    }
+    
+    public void borrarHabitacion(int id_eliminar) {
+        controlP.borrarHabitacion(id_eliminar);
+    }
+
+    public Habitacion traerHabitacion(int id_editar) {
+        return controlP.traerHabitacion(id_editar);
+    }
+
+    public void editarHabitacion(Habitacion habi) {
+        controlP.editarHabitacion(habi);
+    }
+    public void cambiarEstadoHabitacion(int id_editar) {
+        controlP.cambiarEstadoHabitacion(id_editar);
+    }
+    
+    public List<Habitacion> buscarHabitacionesPorNumeroHabitacion(int numero){
+        return controlP.buscarHabitacionesPorNumeroHabitacion(numero);
+    }
+    public Habitacion buscarHabitacionPorNumeroHabitacion(int numero) {
+        return controlP.buscarHabitacionPorNumeroHabitacion(numero);
+    }
 }

@@ -13,9 +13,11 @@ import Modelo.Categoria;
 import Modelo.DetalleReserva;
 import Modelo.Habitacion;
 import Persistencia.exceptions.NonexistentEntityException;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 public class HabitacionJpaController implements Serializable {
@@ -28,6 +30,7 @@ public class HabitacionJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+
     public HabitacionJpaController() {
         emf = Persistence.createEntityManagerFactory("hotelElLibertadorPU");
     }
@@ -192,5 +195,74 @@ public class HabitacionJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public void cambiarEstadoHabitacion(int id) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Buscar la habitación por su ID
+            Habitacion habitacion = em.find(Habitacion.class, id);
+
+            if (habitacion != null) {
+                // Cambiar el estado de la habitación (suponiendo que tienes un atributo 'estado' en tu clase Habitacion)
+                if ("Disponible".equals(habitacion.getEstado())) {
+                    habitacion.setEstado("No disponible");
+                    habitacion.setFechaBaja(new Date());
+                } else {
+                    habitacion.setEstado("Disponible");
+                    habitacion.setFechaBaja(null);
+                }
+
+                // Realizar la actualización en la base de datos
+                em.merge(habitacion);
+
+                em.getTransaction().commit();
+            } else {
+                throw new NonexistentEntityException("La habitación con ID " + id + " no existe.");
+            }
+        } catch (Exception ex) {
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                throw new NonexistentEntityException("Error al cambiar el estado de la habitación.");
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public List<Habitacion> buscarHabitacionesPorNumeroHabitacion(int numero) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT h FROM Habitacion h WHERE h.numhabitacion = :numhabitacion");
+            query.setParameter("numhabitacion", numero);
+
+            List<Habitacion> resultados = query.getResultList();
+
+            return resultados;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Habitacion buscarHabitacionPorNumeroHabitacion(int numero) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT h FROM Habitacion h WHERE h.numhabitacion = :numhabitacion");
+            query.setParameter("numhabitacion", numero);
+
+            Habitacion habitacionEncontrada = (Habitacion) query.getSingleResult();
+
+            return habitacionEncontrada;
+        } catch (NoResultException e) {
+            return null; // Retorna null si no encuentra ninguna habitación con ese nombre
+        } finally {
+            em.close();
+        }
+    }
+
 }

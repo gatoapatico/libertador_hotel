@@ -80,9 +80,7 @@ public class PruebaCategoria extends HttpServlet {
                 session.setAttribute("serviciosSeleccionadosModificar", cate);
                 request.getRequestDispatcher("PruebaCategoria?Op=Listar").forward(request, response);
                 break;
-
             case "AgregarServicioModificar":
-                
                 int servicioId = Integer.parseInt(request.getParameter("servicioId"));
                 Categoria categoriaModificar = (Categoria) session.getAttribute("serviciosSeleccionadosModificar");
                 servicio = control.traerServicio(servicioId);
@@ -90,16 +88,12 @@ public class PruebaCategoria extends HttpServlet {
                 if (categoriaModificar != null && servicio != null) {
                     // Agrega el servicio a la categoría
                     categoriaModificar.getServicios().add(servicio);
-                    for (Servicio servi:categoriaModificar.getServicios()) {
-                        System.out.println(servi.toString());
-                        
-                    }
-                    
 
                     // Puedes redirigir a la página de listado inmediatamente
                     request.getRequestDispatcher("PruebaCategoria?Op=Listar").forward(request, response);
                 }
                 break;
+
            /* case "AgregarServicioModificar":
               
                 int id_editar = Integer.parseInt(request.getParameter("Id"));
