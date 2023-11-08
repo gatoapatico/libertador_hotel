@@ -33,14 +33,8 @@
                     </div>
                     <ul class="links">
                         <li>
-                            <a href="#">Habitaciones</a>
-                            <i class='bx bxs-chevron-down habitacion-arrow arrow  '></i>
-                            <ul class="habitacion-sub-menu sub-menu">
-                                <li><a href="#">Crear habitacion</a></li>
-                                <li><a href="#">Modificar Habitacion</a></li>
-                                <li><a href="#">Habitacion</a></li>
+                            <a href="../SvHabitaciones?Op=Listar">Habitaciones</a>
 
-                            </ul>
                         </li>
                         <li>
                             <a href="#">Salones</a>
@@ -52,17 +46,17 @@
                                 <li><a href="#">Complete Website</a></li>
                             </ul>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="../SvCategorias?Op=Listar">Categorias</a>
+                        </li>-->
+                        <li>
+                            <a href="../PruebaCategoria?Op=Listar">Categorias</a>
                         </li>
                         <li>
                             <a href="../SvServicios?Op=Listar">Servicios</a>
                         </li>
                         <li>
                             <a href="../SvUsuarios?Op=Listar">Usuarios</a>
-                        </li>
-                        <li>
-                            <a href="../PruebaCategoria?Op=Listar">Prueba</a>
                         </li>
                         <li>
                             <a href="#">Log Out</a>

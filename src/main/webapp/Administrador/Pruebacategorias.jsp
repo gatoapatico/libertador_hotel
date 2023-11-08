@@ -65,7 +65,7 @@
                         }
                         %></td>
                     <td data-label="estado">
-                        <a class="buttonTabla" href="../SvCategorias?Op=Eliminar&Id=<%=cate.getId()%>" ><%=cate.getEstado()%></a>
+                        <a class="buttonTabla" href="../PruebaCategoria?Op=Eliminar&Id=<%=cate.getId()%>" ><%=cate.getEstado()%></a>
                         <a class="buttonTabla" href="../PruebaCategoria?Op=Modificar&Id=<%=cate.getId()%>">Modificar</a>
                     </td>
                 </tr>

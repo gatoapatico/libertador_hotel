@@ -12,6 +12,7 @@ public class PersistenceController {
     UsuarioJpaController usuJPA = new UsuarioJpaController();
     ServicioJpaController serviJPA=new ServicioJpaController();
     CategoriaJpaController cateJPA=new CategoriaJpaController();
+    HabitacionJpaController habiJPA=new HabitacionJpaController();
 
     public void crearUsuario(Usuario usu) {
         usuJPA.create(usu);
@@ -153,5 +154,53 @@ public class PersistenceController {
     public Categoria buscarCategoriaPorNombre(String nombre) {
         return cateJPA.buscarCategoriaPorNombre(nombre);
     }
+    //Metodos habitaciones
     
+    public void crearHabitacion(Habitacion habi) {
+        habiJPA.create(habi);
+    }
+    
+    public List<Habitacion> traerHabitaciones() {
+        return habiJPA.findHabitacionEntities();
+    }
+    
+    public void borrarHabitacion(int id_eliminar) {
+        try {
+            habiJPA.destroy(id_eliminar);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public Habitacion traerHabitacion(int id_editar) {
+        return habiJPA.findHabitacion(id_editar);
+    }
+
+    public void editarHabitacion(Habitacion habi) {
+        try {
+            habiJPA.edit(habi);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void cambiarEstadoHabitacion(int id) {
+        try {
+            habiJPA.cambiarEstadoHabitacion(id);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<Habitacion> buscarHabitacionesPorNumeroHabitacion(int numero) {
+        try {
+            return habiJPA.buscarHabitacionesPorNumeroHabitacion(numero);
+        } catch (Exception ex) {
+            Logger.getLogger(PersistenceController.class.getName()).log(Level.SEVERE, null, ex);
+            return null; // 
+        }
+    }
+    public Habitacion buscarHabitacionPorNumeroHabitacion(int numero) {
+        return habiJPA.buscarHabitacionPorNumeroHabitacion(numero);
+    }
 }
