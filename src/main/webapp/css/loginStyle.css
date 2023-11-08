@@ -191,7 +191,7 @@ form .input-field {
   .captcha .button button {
     height: 45px; /* Mismo alto que los input-field */
     width: 100%; /* Mismo ancho que los input-field */
-    background: #95BDBD;
+    background: #333050;
     color: #fff;
     cursor: pointer;
     user-select: none;
@@ -237,7 +237,7 @@ form button {
     border-radius: 3px;
     cursor: pointer;
     margin: 25px 0;
-    background: #95BDBD;
+    background: #333050;
     transition: 0.2s ease;
 }
 

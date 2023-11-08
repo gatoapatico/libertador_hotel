@@ -1,4 +1,4 @@
-const showPopupBtn = document.querySelector(".login-btn");
+const showPopupBtn = document.querySelector(".btn-login");
 const formPopup = document.querySelector(".form-popup");
 const hidePopupBtn = formPopup.querySelector(".close-btn");
 const signupLoginLink = formPopup.querySelectorAll(".bottom-link a");
