@@ -102,5 +102,11 @@ public class Servicio implements Serializable{
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
     }
+
+    @Override
+    public String toString() {
+        return "Servicio{" + "id=" + id + ", nombre=" + nombre + ", costo=" + costo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja + ", estado=" + estado + ", categorias=" + categorias + '}';
+    }
+    
     
 }

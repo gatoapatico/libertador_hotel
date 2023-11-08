@@ -62,6 +62,9 @@
                             <a href="../SvUsuarios?Op=Listar">Usuarios</a>
                         </li>
                         <li>
+                            <a href="../PruebaCategoria?Op=Listar">Prueba</a>
+                        </li>
+                        <li>
                             <a href="#">Log Out</a>
                             <i class='bx bxs-user logout-arrow arrow '></i>
                             <ul class="logout-sub-menu sub-menu">
