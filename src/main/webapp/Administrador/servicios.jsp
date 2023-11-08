@@ -97,7 +97,7 @@
             </div>
             <div class="form-group precio">
                 <label for="precio">Precio del servicio</label>
-                <input type="number" id="precio" name="precio" placeholder="Ingrese el precio del servicio" required>
+                <input type="number" id="precio" name="precio" placeholder="Ingrese el precio del servicio" min="0"required>
             </div>
             <input type="hidden" id="txtEstado" name="txtEstado" value="Activo">
             <input type="hidden" id="fechaActual" name="fechaActual">

@@ -147,6 +147,11 @@ public class Categoria implements Serializable{
     public void setHabitaciones(List<Habitacion> habitaciones) {
         this.habitaciones = habitaciones;
     }
+
+    @Override
+    public String toString() {
+        return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", costoServicios=" + costoServicios + ", cantPersonas=" + cantPersonas + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja + ", estado=" + estado + ", servicios=" + servicios + ", salones=" + salones + ", habitaciones=" + habitaciones + '}';
+    }
     
     
 }
