@@ -4,10 +4,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LIBERTADOR 2</title>
+        <title>LIBERTADOR</title>
         <link rel="stylesheet" href="styles.css">
         <!-- BOOTSTRAP ICONS CDN -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <script defer src="script.js"></script>
     </head>
     <body>
         <div class="body-container">
@@ -30,9 +31,56 @@
                     <h3>descubre el lujo que trasciende el tiempo</h3>
                     <div class="availability-section">
                         <h2>Reserva directa</h2>
-<%--                        <input type="date" />--%>
-                        <h2 class="date-select"><i class="bi bi-calendar-week-fill"></i>fecha llegada - fecha salida</h2>
+                        <!-- <input type="date" /> -->
+                        <h2 class="date-select" data-fechaselect="fechaselect"><i class="bi bi-calendar-week-fill"></i><span id="txt-fecha-llegada">fecha llegada</span> - <span id="txt-fecha-salida">fecha salida</span></h2>
                         <h2 class="btn-availability">Comprobar disponibilidad</h2>
+                    </div>
+                    <div class="fechas-popup hidden">
+                        <div class="fechas">
+                            <h2>
+                                <!-- <i class="bi bi-arrow-left-short"></i> -->
+                                <span id="nombre-mes-llegada"></span>
+                                <!-- <i class="bi bi-arrow-right-short"></i> -->
+                            </h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>DOM</th>
+                                        <th>LUN</th>
+                                        <th>MAR</th>
+                                        <th>MIE</th>
+                                        <th>JUE</th>
+                                        <th>VIE</th>
+                                        <th>SAB</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendar-body-1">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="fechas">
+                            <h2>
+                                <!-- <i class="bi bi-arrow-left-short"></i> -->
+                                <span id="nombre-mes-salida"></span>
+                                <!-- <i class="bi bi-arrow-right-short"></i> -->
+                            </h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>DOM</th>
+                                        <th>LUN</th>
+                                        <th>MAR</th>
+                                        <th>MIE</th>
+                                        <th>JUE</th>
+                                        <th>VIE</th>
+                                        <th>SAB</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendar-body-2">
+                                </tbody>
+                            </table>
+                        </div>
+                        
                     </div>
                 </div>
             </section>
